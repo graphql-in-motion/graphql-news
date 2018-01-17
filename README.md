@@ -1,5 +1,5 @@
 # GraphQL News  
-This repository serves as the boilerplate for the GraphQL API that we'll construct together in (GraphQL in Motion)[https://livevideo.manning.com/course/32/graphql-in-motion]  
+This repository serves as the boilerplate for the GraphQL API that we'll construct together in [GraphQL in Motion](https://livevideo.manning.com/course/32/graphql-in-motion)
 
 ### Installation
 ```sh
