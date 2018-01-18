@@ -1,13 +1,6 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
-import {
-  GraphQLID,
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLList,
-} from 'graphql';
+import { GraphQLInt, GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLList } from 'graphql';
 import { find } from 'lodash';
 
 const links = [
@@ -29,15 +22,6 @@ const commentsList = [
   { id: 4, parent: null, author: 2, content: 'Comment 5' },
 ];
 
-const userType = new GraphQLObjectType({
-  name: 'User',
-  fields: () => ({
-    id: { type: GraphQLID },
-    username: { type: GraphQLString },
-    about: { type: GraphQLString },
-  }),
-});
-
 function getComments(commentID) {
   const comments = commentsList.filter(comment => comment.parent === commentID);
   if (comments.length > 0) {
@@ -46,10 +30,19 @@ function getComments(commentID) {
   return null;
 }
 
-const commentsType = new GraphQLObjectType({
-  name: 'Comment',
+const userType = new GraphQLObjectType({
+  name: 'User',
   fields: () => ({
-    id: { type: GraphQLID },
+    id: { type: GraphQLInt },
+    username: { type: GraphQLString },
+    about: { type: GraphQLString },
+  }),
+});
+
+const commentsType = new GraphQLObjectType({
+  name: 'Comments',
+  fields: () => ({
+    id: { type: GraphQLInt },
     parent: { type: commentsType },
     comments: {
       type: new GraphQLList(commentsType),
@@ -72,7 +65,7 @@ const commentsType = new GraphQLObjectType({
 const linkType = new GraphQLObjectType({
   name: 'Link',
   fields: () => ({
-    id: { type: GraphQLID },
+    id: { type: GraphQLInt },
     url: { type: GraphQLString },
     description: { type: GraphQLString },
     author: {
@@ -93,7 +86,7 @@ const queryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
     allLinks: {
-      type: linkType,
+      type: new GraphQLList(linkType),
       resolve: () => links,
     },
     link: {
@@ -104,7 +97,7 @@ const queryType = new GraphQLObjectType({
       resolve: (_, { id }) => find(links, { id }),
     },
     allUsers: {
-      type: userType,
+      type: new GraphQLList(userType),
       resolve: () => users,
     },
     user: {
