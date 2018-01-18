@@ -5,11 +5,11 @@ This repository serves as the boilerplate for the GraphQL API that we'll constru
 ```sh
 git clone https://github.com/graphql-in-motion/graphql-news.git
 cd graphql-news
+npm i -g yarn
+yarn install
 ```  
 
 ### Running the Server
 ```sh
-npm i -g yarn
-yarn install
 yarn start
 ```
