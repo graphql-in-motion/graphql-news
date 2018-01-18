@@ -1,40 +1,14 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
-import { makeExecutableSchema } from 'graphql-tools';
+import {
+  GraphQLID,
+  GraphQLObjectType,
+  GraphQLSchema,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLList,
+} from 'graphql';
 import { find } from 'lodash';
-import { graphQLObjectType } from 'graphql';
-
-// Construct a schema, using GraphQL schema language
-const typeDefs = `
-  type Link {
-    id: Int! @unique
-    url: String!
-    description: String
-    author: User!
-    comments: [Comment]
-  }
-
-  type User {
-    id: Int! @unique
-    username: String!
-    about: String!
-  }
-
-  type Comment {
-    id: Int! @unique
-    parent: Comment
-    comments: [Comment]
-    author: User!
-    content: String!
-  }
-
-  type Query {
-    allLinks: [Link]
-    link(id: Int!): Link
-    allUsers: [User]
-    user(id: Int!): User
-  }
-`;
 
 const links = [
   { id: 0, author: 0, url: 'https://google.com/', description: 'Google', comments: [0, 4] },
@@ -55,6 +29,15 @@ const commentsList = [
   { id: 4, parent: null, author: 2, content: 'Comment 5' },
 ];
 
+const userType = new GraphQLObjectType({
+  name: 'User',
+  fields: () => ({
+    id: { type: GraphQLID },
+    username: { type: GraphQLString },
+    about: { type: GraphQLString },
+  }),
+});
+
 function getComments(commentID) {
   const comments = commentsList.filter(comment => comment.parent === commentID);
   if (comments.length > 0) {
@@ -63,24 +46,78 @@ function getComments(commentID) {
   return null;
 }
 
-const resolvers = {
-  Query: {
-    allLinks: () => links,
-    link: (obj, args, context, info) => find(links, { id: args.id }), // eslint-disable-line no-unused-vars
-    allUsers: () => users,
-    user: (obj, args, context, info) => find(users, { id: args.id }), // eslint-disable-line no-unused-vars
-  },
-  Link: {
-    author: ({ author }) => find(users, { id: author }),
-    comments: ({ comments }) => comments.map(i => find(commentsList, { id: i })),
-  },
-  Comment: {
-    parent: ({ parent }) => find(commentsList, { id: parent }),
-    comments: ({ id }) => getComments(id),
-  },
-};
+const commentsType = new GraphQLObjectType({
+  name: 'Comment',
+  fields: () => ({
+    id: { type: GraphQLID },
+    parent: { type: commentsType },
+    comments: {
+      type: new GraphQLList(commentsType),
+      args: {
+        id: { type: GraphQLInt },
+      },
+      resolve: ({ id }) => getComments(id),
+    },
+    author: {
+      type: userType,
+      args: {
+        author: { type: GraphQLInt },
+      },
+      resolve: ({ author }) => find(users, { id: author }),
+    },
+    content: { type: GraphQLString },
+  }),
+});
 
-const schema = makeExecutableSchema({ typeDefs, resolvers });
+const linkType = new GraphQLObjectType({
+  name: 'Link',
+  fields: () => ({
+    id: { type: GraphQLID },
+    url: { type: GraphQLString },
+    description: { type: GraphQLString },
+    author: {
+      type: userType,
+      args: {
+        author: { type: GraphQLInt },
+      },
+      resolve: ({ author }) => find(users, { id: author }),
+    },
+    comments: {
+      type: new GraphQLList(commentsType),
+      resolve: ({ comments }) => comments.map(i => find(commentsList, { id: i })),
+    },
+  }),
+});
+
+const queryType = new GraphQLObjectType({
+  name: 'Query',
+  fields: () => ({
+    allLinks: {
+      type: linkType,
+      resolve: () => links,
+    },
+    link: {
+      type: linkType,
+      args: {
+        id: { type: GraphQLInt },
+      },
+      resolve: (_, { id }) => find(links, { id }),
+    },
+    allUsers: {
+      type: userType,
+      resolve: () => users,
+    },
+    user: {
+      type: userType,
+      args: {
+        id: { type: GraphQLInt },
+      },
+      resolve: (_, { id }) => find(users, { id }),
+    },
+  }),
+});
+
+const schema = new GraphQLSchema({ query: queryType });
 
 const app = express();
 
