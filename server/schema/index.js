@@ -1,83 +1,6 @@
-import {
-  GraphQLID,
-  GraphQLInt,
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLString,
-  GraphQLList,
-} from 'graphql';
+import { GraphQLID, GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLList } from 'graphql';
 import { ObjectId } from 'mongodb';
-
-const userType = new GraphQLObjectType({
-  name: 'User',
-  fields: () => ({
-    _id: { type: GraphQLID },
-    username: { type: GraphQLString },
-    about: { type: GraphQLString },
-  }),
-});
-
-const commentsType = new GraphQLObjectType({
-  name: 'Comments',
-  fields: () => ({
-    _id: { type: GraphQLID },
-    link: {
-      /**
-       * Because of the way the lazy evaluation works on the `fields` object, we can reference the
-       * Link type before it is defined
-       */
-      type: linkType, // eslint-disable-line no-use-before-define
-      resolve: async ({ link }, data, { db: { Links } }) => await Links.findOne(ObjectId(link)),
-    },
-    parent: {
-      type: commentsType,
-      resolve: async ({ parent }, data, { db: { Comments } }) =>
-        await Comments.findOne(ObjectId(parent)),
-    },
-    comments: {
-      type: new GraphQLList(commentsType),
-      args: {
-        _id: { type: GraphQLID },
-      },
-      resolve: async ({ _id }, data, { db: { Comments } }) => {
-        const comments = await Comments.find({}).toArray();
-        return comments.filter(i => i.parent === _id.toString());
-      },
-    },
-    author: {
-      type: userType,
-      args: {
-        author: { type: GraphQLID },
-      },
-      resolve: async ({ author }, data, { db: { Users } }) => await Users.findOne(ObjectId(author)), // eslint-disable-line no-return-await
-    },
-    content: { type: GraphQLString },
-  }),
-});
-
-const linkType = new GraphQLObjectType({
-  name: 'Link',
-  fields: () => ({
-    _id: { type: GraphQLID },
-    url: { type: GraphQLString },
-    description: { type: GraphQLString },
-    author: {
-      type: userType,
-      args: {
-        author: { type: GraphQLID },
-      },
-      resolve: async (_, { author }, { db: { Users } }) => await Users.findOne(ObjectId(author)),
-    },
-    comments: {
-      type: new GraphQLList(commentsType),
-      resolve: async ({ _id }, data, { db: { Comments } }) => {
-        const comments = await Comments.find({}).toArray();
-        return comments.filter(i => i.parent === _id.toString());
-      },
-    },
-    score: { type: GraphQLInt },
-  }),
-});
+import { linkType, userType, commentsType } from './typeDefs';
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -145,6 +68,44 @@ const mutationType = new GraphQLObjectType({
         const response = await Links.insert(link);
 
         return Object.assign({ _id: response.insertedIds[0] }, data);
+      },
+    },
+    createUser: {
+      type: userType,
+      args: {
+        username: GraphQLString,
+        authProvider: {
+          email: GraphQLString,
+          password: GraphQLString,
+        },
+      },
+      resolve: async (_, { username, authProvider }, { db: { Users } }) => {
+        const newUser = {
+          username,
+          email: authProvider.email,
+          password: authProvider.password,
+        };
+        const response = await Users.insert(newUser);
+
+        return Object.assign({ _id: response.insertedIds[0] }, newUser);
+      },
+    },
+    signInUser: {
+      type: userType,
+      args: {
+        authProvider: {
+          email: GraphQLString,
+          password: GraphQLString,
+        },
+      },
+      resolve: (_, { authProvider }, { db: { Users } }) => {
+        const user = Users.findOne({ email: authProvider.email });
+
+        if (authProvider.password === user.password) {
+          return { token: `token-${user.email}`, user };
+        }
+
+        return null;
       },
     },
     upvoteLink: {

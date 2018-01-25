@@ -2,6 +2,8 @@ import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { MongoClient } from 'mongodb';
 import schema from './schema';
+import auth from './utils/auth';
+import buildDataloaders from './utils/dataloader';
 
 const MONGO_URL = 'mongodb://localhost:27017/test';
 
@@ -10,17 +12,25 @@ const start = async () => {
   await MongoClient.connect(MONGO_URL, { promiseLibrary: Promise })
     .catch(err => console.error(err.stack)) // eslint-disable-line no-console
     .then(client => {
-      const res = client.db('test');
+      const response = client.db('test');
       const db = {
-        Links: res.collection('links'),
-        Users: res.collection('users'),
-        Comments: res.collection('comments'),
+        Links: response.collection('links'),
+        Users: response.collection('users'),
+        Comments: response.collection('comments'),
       };
 
-      const buildOptions = {
-        context: { db },
-        schema,
-        graphiql: true,
+      const buildOptions = async req => {
+        const user = await auth(req, db.Users);
+
+        return {
+          context: {
+            dataloaders: buildDataloaders(db),
+            db,
+            user,
+          },
+          schema,
+          graphiql: true,
+        };
       };
 
       app.use('/graphql', graphqlHTTP(buildOptions));
