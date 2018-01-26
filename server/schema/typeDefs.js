@@ -1,11 +1,21 @@
-import { GraphQLID, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql';
+import {
+  GraphQLID,
+  GraphQLObjectType,
+  GraphQLInputObjectType,
+  GraphQLNonNull,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLList,
+} from 'graphql';
 import { ObjectId } from 'mongodb';
 
 export const userType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    _id: { type: GraphQLID },
-    username: { type: GraphQLString },
+    // _id should *never* be null
+    _id: { type: new GraphQLNonNull(GraphQLID) },
+    // No empty usernames
+    username: { type: new GraphQLNonNull(GraphQLString) },
     about: { type: GraphQLString },
   }),
 });
@@ -13,12 +23,10 @@ export const userType = new GraphQLObjectType({
 export const commentsType = new GraphQLObjectType({
   name: 'Comments',
   fields: () => ({
-    _id: { type: GraphQLID },
+    _id: { type: new GraphQLNonNull(GraphQLID) },
     link: {
-      /**
-       * Because of the way the lazy evaluation works on the `fields` object, we can reference the
-       * Link type before it is defined
-       */
+      // Because of the way the lazy evaluation works on the `fields` object, we can reference the
+      // Link type before it is defined
       type: linkType, // eslint-disable-line no-use-before-define
       resolve: async ({ link }, data, { db: { Links } }) => await Links.findOne(ObjectId(link)),
     },
@@ -30,7 +38,7 @@ export const commentsType = new GraphQLObjectType({
     comments: {
       type: new GraphQLList(commentsType),
       args: {
-        _id: { type: GraphQLID },
+        _id: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: async ({ _id }, data, { db: { Comments } }) => {
         const comments = await Comments.find({}).toArray();
@@ -40,26 +48,32 @@ export const commentsType = new GraphQLObjectType({
     author: {
       type: userType,
       args: {
+        // We shouldn't be able to query for an author w/o knowing their ID
         author: { type: GraphQLID },
       },
-      resolve: async ({ author }, data, { db: { Users } }) => await Users.findOne(ObjectId(author)), // eslint-disable-line no-return-await
+      resolve: async ({ author }, data, { db: { Users } }) => await Users.findOne(ObjectId(author)),
     },
-    content: { type: GraphQLString },
+    // The body of the comment should be non-null. We don't want people posting empty comments
+    content: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
 
 export const linkType = new GraphQLObjectType({
   name: 'Link',
   fields: () => ({
-    _id: { type: GraphQLID },
-    url: { type: GraphQLString },
+    _id: { type: new GraphQLNonNull(GraphQLID) },
+    // No empty URLs
+    url: { type: new GraphQLNonNull(GraphQLString) },
     description: { type: GraphQLString },
     author: {
       type: userType,
       args: {
         author: { type: GraphQLID },
       },
-      resolve: async (_, { author }, { db: { Users } }) => await Users.findOne(ObjectId(author)),
+      resolve: async (_, { author }, { db: { Users }, user }) => {
+        console.log(user);
+        return await Users.findOne(ObjectId(author));
+      },
     },
     comments: {
       type: new GraphQLList(commentsType),
@@ -70,4 +84,20 @@ export const linkType = new GraphQLObjectType({
     },
     score: { type: GraphQLInt },
   }),
+});
+
+export const provider = new GraphQLInputObjectType({
+  name: 'authProvider',
+  fields: {
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+  },
+});
+
+export const signInPayload = new GraphQLObjectType({
+  name: 'signInPayload',
+  fields: {
+    token: { type: new GraphQLNonNull(GraphQLString) },
+    user: { type: new GraphQLNonNull(userType) },
+  },
 });

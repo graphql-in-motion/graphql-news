@@ -1,6 +1,8 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { MongoClient } from 'mongodb';
+import jwt from 'express-jwt';
+
 import schema from './schema';
 import auth from './utils/auth';
 import buildDataloaders from './utils/dataloader';
@@ -33,6 +35,14 @@ const start = async () => {
         };
       };
 
+      app.use(
+        '/graphql',
+        jwt({
+          secret: 'token-tyler.reckart@gmail.com',
+          requestProperty: 'auth',
+          credentialsRequired: false,
+        })
+      );
       app.use('/graphql', graphqlHTTP(buildOptions));
 
       app.listen(4000, () => console.log('Running a GraphQL API server at localhost:4000/graphql')); // eslint-disable-line no-console

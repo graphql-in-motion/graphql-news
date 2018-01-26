@@ -1,6 +1,13 @@
-import { GraphQLID, GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLList } from 'graphql';
+import {
+  GraphQLID,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLSchema,
+  GraphQLString,
+  GraphQLList,
+} from 'graphql';
 import { ObjectId } from 'mongodb';
-import { linkType, userType, commentsType } from './typeDefs';
+import { linkType, userType, commentsType, provider, signInPayload } from './typeDefs';
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -12,7 +19,8 @@ const queryType = new GraphQLObjectType({
     link: {
       type: linkType,
       args: {
-        _id: { type: GraphQLID },
+        // We must know a link's ID in order to query for it
+        _id: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: async (_, { _id }, { db: { Links } }) => await Links.findOne(ObjectId(_id)),
     },
@@ -23,7 +31,8 @@ const queryType = new GraphQLObjectType({
     user: {
       type: userType,
       args: {
-        _id: { type: GraphQLID },
+        // We must know a user's ID in order to query for him/her
+        _id: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: async (_, { _id }, { db: { Users } }) => await Users.findOne(ObjectId(_id)),
     },
@@ -40,9 +49,11 @@ const mutationType = new GraphQLObjectType({
     createComment: {
       type: commentsType,
       args: {
-        link: { type: GraphQLID },
+        // Comments must have a parent link
+        link: { type: new GraphQLNonNull(GraphQLID) },
         parent: { type: GraphQLID },
-        content: { type: GraphQLString },
+        // No empty comments
+        content: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: async (_, data, { db: { Comments } }) => {
         const response = await Comments.insert(data);
@@ -53,12 +64,14 @@ const mutationType = new GraphQLObjectType({
     createLink: {
       type: linkType,
       args: {
-        url: { type: GraphQLString },
+        // No empty URLs
+        url: { type: new GraphQLNonNull(GraphQLString) },
         description: { type: GraphQLString },
       },
-      resolve: async (_, data, { db: { Links } }) => {
+      resolve: async (_, data, { db: { Links }, user }) => {
         const link = Object.assign(
           {
+            author: user && user._id, // The signed in user is our author
             score: 0,
             comments: [],
           },
@@ -73,11 +86,10 @@ const mutationType = new GraphQLObjectType({
     createUser: {
       type: userType,
       args: {
-        username: GraphQLString,
-        authProvider: {
-          email: GraphQLString,
-          password: GraphQLString,
-        },
+        // No empty usernames
+        username: { type: new GraphQLNonNull(GraphQLString) },
+        // We can't create a user without the proper credentials
+        authProvider: { type: new GraphQLNonNull(provider) },
       },
       resolve: async (_, { username, authProvider }, { db: { Users } }) => {
         const newUser = {
@@ -91,15 +103,13 @@ const mutationType = new GraphQLObjectType({
       },
     },
     signInUser: {
-      type: userType,
+      type: signInPayload,
       args: {
-        authProvider: {
-          email: GraphQLString,
-          password: GraphQLString,
-        },
+        // We can't sign in a user w/o credentials
+        authProvider: { type: new GraphQLNonNull(provider) },
       },
-      resolve: (_, { authProvider }, { db: { Users } }) => {
-        const user = Users.findOne({ email: authProvider.email });
+      resolve: async (_, { authProvider }, { db: { Users } }) => {
+        const user = await Users.findOne({ email: authProvider.email });
 
         if (authProvider.password === user.password) {
           return { token: `token-${user.email}`, user };
@@ -111,7 +121,8 @@ const mutationType = new GraphQLObjectType({
     upvoteLink: {
       type: linkType,
       args: {
-        _id: { type: GraphQLID },
+        // We can't vote on a link w/o its ID
+        _id: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: async (_, { _id }, { db: { Links } }) => {
         await Links.update({ _id: ObjectId(_id) }, { $inc: { score: 1 } });
@@ -122,7 +133,7 @@ const mutationType = new GraphQLObjectType({
     downvoteLink: {
       type: linkType,
       args: {
-        _id: { type: GraphQLID },
+        _id: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: async (_, { _id }, { db: { Links } }) => {
         await Links.update({ _id: ObjectId(_id) }, { $inc: { score: -1 } });
