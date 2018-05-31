@@ -2,6 +2,9 @@ import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { MongoClient } from 'mongodb';
 import jwt from 'express-jwt';
+import { execute, subscribe } from 'graphql';
+import { createServer } from 'http';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 import schema from './schema';
 import auth from './utils/auth';
@@ -32,20 +35,46 @@ const start = async () => {
           },
           schema,
           graphiql: true,
+          subscriptionsEndpoint: subscriptionServer, // eslint-disable-line no-use-before-define
         };
       };
 
       app.use(
         '/graphql',
         jwt({
-          secret: 'token-tyler.reckart@gmail.com',
+          secret: 'token-example@gmail.com',
           requestProperty: 'auth',
           credentialsRequired: false,
         })
       );
       app.use('/graphql', graphqlHTTP(buildOptions));
 
-      app.listen(4000, () => console.log('Running a GraphQL API server at localhost:4000/graphql')); // eslint-disable-line no-console
+      app.listen(4000, () => {
+        console.log('Running a GraphQL API server at localhost:4000/graphql'); // eslint-disable-line no-console
+      });
+
+      const WS_PORT = 4040;
+
+      // Create WebSocket listener server
+      const websocketServer = createServer(app);
+
+      // Bind it to port and start listening
+      websocketServer.listen(
+        WS_PORT,
+        () => console.log(`Websocket Server is now running on http://localhost:${WS_PORT}`) // eslint-disable-line no-console
+      );
+
+      const subscriptionServer = SubscriptionServer.create(
+        {
+          schema,
+          execute,
+          subscribe,
+        },
+        {
+          server: websocketServer,
+          path: '/subscriptions',
+        }
+      );
     });
 };
 
