@@ -11,8 +11,6 @@ import { PubSub } from 'graphql-subscriptions';
 import { linkType, userType, commentsType, provider, signInPayload } from './typeDefs';
 
 const pubsub = new PubSub();
-const UPVOTE_LINK = 'upvoteLink';
-const DOWNVOTE_LINK = 'downvoteLink';
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -132,7 +130,7 @@ const mutationType = new GraphQLObjectType({
       resolve: async (_, { _id, score }, { db: { Links } }) => {
         await Links.update({ _id: ObjectId(_id) }, { $inc: { score: 1 } });
 
-        pubsub.publish(UPVOTE_LINK, { score: score + 1 });
+        pubsub.publish('Vote', { 'Vote': { score: score + 1 } }); // eslint-disable-line prettier/prettier
 
         return Links.findOne(ObjectId(_id));
       },
@@ -145,7 +143,7 @@ const mutationType = new GraphQLObjectType({
       resolve: async (_, { _id, score }, { db: { Links } }) => {
         await Links.update({ _id: ObjectId(_id) }, { $inc: { score: -1 } });
 
-        pubsub.publish(DOWNVOTE_LINK, { score: score - 1 });
+        pubsub.publish('Vote', { 'Vote': { score: score - 1 } }); // eslint-disable-line prettier/prettier
 
         return Links.findOne(ObjectId(_id));
       },
@@ -156,9 +154,9 @@ const mutationType = new GraphQLObjectType({
 const subscriptionType = new GraphQLObjectType({
   name: 'Subscription',
   fields: () => ({
-    upvoteLink: {
+    Vote: {
       type: linkType,
-      resolve: () => pubsub.asyncIterator(UPVOTE_LINK),
+      subscribe: () => pubsub.asyncIterator('Vote'),
     },
   }),
 });
