@@ -127,8 +127,10 @@ const mutationType = new GraphQLObjectType({
         // We can't vote on a link w/o its ID
         _id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve: async (_, { _id, score }, { db: { Links } }) => {
-        await Links.update({ _id: ObjectId(_id) }, { $inc: { score: 1 } });
+      resolve: async (_, { _id }, { db: { Links } }) => {
+        const link = await Links.findOneAndUpdate({ _id: ObjectId(_id) }, { $inc: { score: 1 } });
+
+        const { score } = link.value;
 
         pubsub.publish('Vote', { 'Vote': { score: score + 1 } }); // eslint-disable-line prettier/prettier
 
@@ -140,8 +142,10 @@ const mutationType = new GraphQLObjectType({
       args: {
         _id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve: async (_, { _id, score }, { db: { Links } }) => {
-        await Links.update({ _id: ObjectId(_id) }, { $inc: { score: -1 } });
+      resolve: async (_, { _id }, { db: { Links } }) => {
+        const link = await Links.findOneAndUpdate({ _id: ObjectId(_id) }, { $inc: { score: -1 } });
+
+        const { score } = link.value;
 
         pubsub.publish('Vote', { 'Vote': { score: score - 1 } }); // eslint-disable-line prettier/prettier
 
