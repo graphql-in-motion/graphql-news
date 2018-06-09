@@ -1,5 +1,5 @@
 import express from 'express';
-import graphqlHTTP from 'express-graphql';
+import graphqlHTTP from 'graphql-in-motion_express-graphql';
 import { MongoClient } from 'mongodb';
 import jwt from 'express-jwt';
 import { execute, subscribe } from 'graphql';
@@ -25,12 +25,15 @@ const start = async () => {
       // Bind it to port and start listening
       websocketServer.listen(
         WS_PORT,
-        () => console.log(`Websocket Server is now running on ws://localhost:${WS_PORT}`) // eslint-disable-line no-console
+        () =>
+          console.log(`Websocket Server is now running on ws://localhost:${WS_PORT}/subscriptions`) // eslint-disable-line no-console
       );
 
       // eslint-disable-next-line no-new
       new SubscriptionServer(
         {
+          onConnect: () => console.log('Websocket connection established'), // eslint-disable-line no-console
+          onDisconnect: () => console.log('Websocket connection terminated'), // eslint-disable-line no-console
           schema,
           execute,
           subscribe,
@@ -60,7 +63,7 @@ const start = async () => {
           },
           schema,
           graphiql: true,
-          subscriptionsEndpoint: `ws://localhost:${PORT}/subscriptions`,
+          subscriptionsEndpoint: `ws://localhost:${WS_PORT}/subscriptions`,
         };
       };
 

@@ -1922,6 +1922,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.4:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
+graphql-in-motion_express-graphql@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-in-motion_express-graphql/-/graphql-in-motion_express-graphql-1.0.0.tgz#c789c626696f94ae0905d00a9c6deb1604cfe0e9"
+
 graphql-subscriptions@^0.5.6:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.5.6.tgz#0d8e960fbaaf9ecbe7900366e86da2fc143fc5b2"

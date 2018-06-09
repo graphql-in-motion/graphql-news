@@ -132,7 +132,7 @@ const mutationType = new GraphQLObjectType({
       resolve: async (_, { _id, score }, { db: { Links } }) => {
         await Links.update({ _id: ObjectId(_id) }, { $inc: { score: 1 } });
 
-        pubsub.publish(UPVOTE_LINK, { score: score - 1 });
+        pubsub.publish(UPVOTE_LINK, { score: score + 1 });
 
         return Links.findOne(ObjectId(_id));
       },
@@ -156,9 +156,9 @@ const mutationType = new GraphQLObjectType({
 const subscriptionType = new GraphQLObjectType({
   name: 'Subscription',
   fields: () => ({
-    vote: {
+    upvoteLink: {
       type: linkType,
-      subscribe: () => pubsub.asyncIterator([UPVOTE_LINK, DOWNVOTE_LINK]),
+      resolve: () => pubsub.asyncIterator(UPVOTE_LINK),
     },
   }),
 });
