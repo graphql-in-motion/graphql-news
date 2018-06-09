@@ -11,12 +11,37 @@ import auth from './utils/auth';
 import buildDataloaders from './utils/dataloader';
 
 const MONGO_URL = 'mongodb://localhost:27017/test';
+const PORT = 4000;
+const WS_PORT = 4040;
 
 const start = async () => {
   const app = express();
   await MongoClient.connect(MONGO_URL, { promiseLibrary: Promise })
     .catch(err => console.error(err.stack)) // eslint-disable-line no-console
     .then(client => {
+      // Create WebSocket listener server
+      const websocketServer = createServer(app);
+
+      // Bind it to port and start listening
+      websocketServer.listen(
+        WS_PORT,
+        () => console.log(`Websocket Server is now running on ws://localhost:${WS_PORT}`) // eslint-disable-line no-console
+      );
+
+      // eslint-disable-next-line no-new
+      new SubscriptionServer(
+        {
+          schema,
+          execute,
+          subscribe,
+        },
+        {
+          server: websocketServer,
+          path: '/subscriptions',
+        }
+      );
+
+      // Configure the server
       const response = client.db('test');
       const db = {
         Links: response.collection('links'),
@@ -35,7 +60,7 @@ const start = async () => {
           },
           schema,
           graphiql: true,
-          subscriptionsEndpoint: subscriptionServer, // eslint-disable-line no-use-before-define
+          subscriptionsEndpoint: `ws://localhost:${PORT}/subscriptions`,
         };
       };
 
@@ -49,32 +74,9 @@ const start = async () => {
       );
       app.use('/graphql', graphqlHTTP(buildOptions));
 
-      app.listen(4000, () => {
-        console.log('Running a GraphQL API server at localhost:4000/graphql'); // eslint-disable-line no-console
+      app.listen(PORT, () => {
+        console.log(`Running a GraphQL API server at localhost:${PORT}/graphql`); // eslint-disable-line no-console
       });
-
-      const WS_PORT = 4040;
-
-      // Create WebSocket listener server
-      const websocketServer = createServer(app);
-
-      // Bind it to port and start listening
-      websocketServer.listen(
-        WS_PORT,
-        () => console.log(`Websocket Server is now running on http://localhost:${WS_PORT}`) // eslint-disable-line no-console
-      );
-
-      const subscriptionServer = SubscriptionServer.create(
-        {
-          schema,
-          execute,
-          subscribe,
-        },
-        {
-          server: websocketServer,
-          path: '/subscriptions',
-        }
-      );
     });
 };
 

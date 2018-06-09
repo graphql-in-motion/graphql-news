@@ -7,7 +7,12 @@ import {
   GraphQLList,
 } from 'graphql';
 import { ObjectId } from 'mongodb';
+import { PubSub } from 'graphql-subscriptions';
 import { linkType, userType, commentsType, provider, signInPayload } from './typeDefs';
+
+const pubsub = new PubSub();
+const UPVOTE_LINK = 'upvoteLink';
+const DOWNVOTE_LINK = 'downvoteLink';
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -124,8 +129,10 @@ const mutationType = new GraphQLObjectType({
         // We can't vote on a link w/o its ID
         _id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve: async (_, { _id }, { db: { Links } }) => {
+      resolve: async (_, { _id, score }, { db: { Links } }) => {
         await Links.update({ _id: ObjectId(_id) }, { $inc: { score: 1 } });
+
+        pubsub.publish(UPVOTE_LINK, { score: score - 1 });
 
         return Links.findOne(ObjectId(_id));
       },
@@ -135,8 +142,10 @@ const mutationType = new GraphQLObjectType({
       args: {
         _id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve: async (_, { _id }, { db: { Links } }) => {
+      resolve: async (_, { _id, score }, { db: { Links } }) => {
         await Links.update({ _id: ObjectId(_id) }, { $inc: { score: -1 } });
+
+        pubsub.publish(DOWNVOTE_LINK, { score: score - 1 });
 
         return Links.findOne(ObjectId(_id));
       },
@@ -144,9 +153,20 @@ const mutationType = new GraphQLObjectType({
   }),
 });
 
+const subscriptionType = new GraphQLObjectType({
+  name: 'Subscription',
+  fields: () => ({
+    vote: {
+      type: linkType,
+      subscribe: () => pubsub.asyncIterator([UPVOTE_LINK, DOWNVOTE_LINK]),
+    },
+  }),
+});
+
 const graphQLSchemaConfig = {
   query: queryType,
   mutation: mutationType,
+  subscription: subscriptionType,
 };
 
 const schema = new GraphQLSchema(graphQLSchemaConfig);
