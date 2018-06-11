@@ -37,9 +37,6 @@ export const commentsType = new GraphQLObjectType({
     },
     comments: {
       type: new GraphQLList(commentsType),
-      args: {
-        _id: { type: new GraphQLNonNull(GraphQLID) },
-      },
       resolve: async ({ _id }, data, { db: { Comments } }) => {
         const comments = await Comments.find({}).toArray();
         return comments.filter(i => i.parent === _id.toString());
@@ -70,10 +67,7 @@ export const linkType = new GraphQLObjectType({
       args: {
         author: { type: GraphQLID },
       },
-      resolve: async (_, { author }, { db: { Users }, user }) => {
-        console.log(user);
-        return await Users.findOne(ObjectId(author));
-      },
+      resolve: async (_, { author }, { db: { Users } }) => await Users.findOne(ObjectId(author)),
     },
     comments: {
       type: new GraphQLList(commentsType),

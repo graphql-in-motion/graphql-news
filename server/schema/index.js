@@ -1,9 +1,11 @@
 import {
   GraphQLID,
   GraphQLObjectType,
+  GraphQLInputObjectType,
   GraphQLNonNull,
   GraphQLSchema,
   GraphQLString,
+  GraphQLInt,
   GraphQLList,
 } from 'graphql';
 import { ObjectId } from 'mongodb';
@@ -12,12 +14,40 @@ import { linkType, userType, commentsType, provider, signInPayload } from './typ
 
 const pubsub = new PubSub();
 
+const linkFilter = new GraphQLInputObjectType({
+  name: 'linkFilter',
+  fields: () => ({
+    urlContains: { type: new GraphQLNonNull(GraphQLString) },
+  }),
+});
+
 const queryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
     allLinks: {
       type: new GraphQLList(linkType),
-      resolve: async (_, data, { db: { Links } }) => await Links.find({}).toArray(),
+      args: {
+        first: { type: GraphQLInt },
+        skip: { type: GraphQLInt },
+      },
+      resolve: async (_, { first, skip }, { db: { Links } }) => {
+        if (first && !skip) {
+          return await Links.find({})
+            .limit(first)
+            .toArray();
+        } else if (skip && !first) {
+          return await Links.find({})
+            .skip(skip)
+            .toArray();
+        } else if (skip && first) {
+          return await Links.find({})
+            .limit(first)
+            .skip(skip)
+            .toArray();
+        }
+
+        return await Links.find({}).toArray();
+      },
     },
     link: {
       type: linkType,
@@ -26,6 +56,17 @@ const queryType = new GraphQLObjectType({
         _id: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: async (_, { _id }, { db: { Links } }) => await Links.findOne(ObjectId(_id)),
+    },
+    filterLinks: {
+      type: new GraphQLList(linkType),
+      args: {
+        filter: { type: linkFilter },
+      },
+      resolve: async (_, { filter }, { db: { Links } }) => {
+        const { urlContains } = filter;
+
+        return await Links.find({ url: { $regex: `.*${urlContains}.*` } }).toArray();
+      },
     },
     allUsers: {
       type: new GraphQLList(userType),
