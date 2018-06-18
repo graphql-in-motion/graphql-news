@@ -1,5 +1,10 @@
 {
-  "_id": "5a667e7fa66a67444e14e278",
-  "url": "https://google.com/",
-  "description": "Google"
+  "data": {
+    "link": {
+      "_id": "5a667e7fa66a67444e14e278",
+      "url": "https://google.com/",
+      "score": -6,
+      "description": "Google"
+    }
+  }
 }
