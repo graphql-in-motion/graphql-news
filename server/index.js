@@ -5,6 +5,7 @@ import jwt from 'express-jwt';
 import { execute, subscribe } from 'graphql';
 import { createServer } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
+import cors from 'cors';
 // Schema
 import schema from './schema';
 // Local utility files
@@ -63,7 +64,7 @@ const start = async () => {
           credentialsRequired: false,
         })
       );
-      app.use('/graphql', graphqlHTTP(buildOptions));
+      app.use('/graphql', cors(), graphqlHTTP(buildOptions));
 
       app.listen(PORT, () => {
         console.log(`Running a GraphQL API server at localhost:${PORT}/graphql`); // eslint-disable-line no-console

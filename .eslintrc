@@ -19,6 +19,7 @@
     "jest": true
   },
   "plugins": [
-    "prettier"
+    "prettier",
+    "react"
   ]
 }
