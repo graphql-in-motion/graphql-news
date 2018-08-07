@@ -4,11 +4,9 @@
   "private": true,
   "dependencies": {
     "apollo-client-preset": "^1.0.8",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
-    "jest-styled-components": "^6.0.0-1",
+    "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-apollo": "^2.1.9",
     "react-dom": "^16.4.1",
