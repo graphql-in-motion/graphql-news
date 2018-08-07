@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Title = styled.a`
@@ -14,7 +15,7 @@ const Url = styled.a`
   text-decoration: none;
 `;
 
-const Link = ({ author, url, description, comments, score }) => (
+const Link = ({ author, url, description, commentsLength, score }) => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <Score score={score} />
     <div style={{ display: 'inline-flex', flexDirection: 'column' }}>
@@ -22,10 +23,18 @@ const Link = ({ author, url, description, comments, score }) => (
         <Title href="#">{description}</Title>
         <Url href="#">({url.replace(/(^\w+:|^)\/\//, '')})</Url>
       </div>
-      <Meta author={author} comments={comments} />
+      <Meta author={author} commentsLength={commentsLength} />
     </div>
   </div>
 );
+
+Link.propTypes = {
+  author: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  commentsLength: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
+};
 
 const ScoreContainer = styled.div`
   display: inline-flex;
@@ -64,6 +73,10 @@ const Score = ({ score }) => (
   </ScoreContainer>
 );
 
+Score.propTypes = {
+  score: PropTypes.number.isRequired,
+};
+
 const MetaContainer = styled.div`
   display: flex;
   margin-top: 0.25em;
@@ -84,7 +97,7 @@ const Anchor = styled.a`
   color: inherit;
 `;
 
-const Meta = ({ author, comments }) => (
+const Meta = ({ author, commentsLength }) => (
   <MetaContainer>
     <span>
       by <Anchor href="#">{author}</Anchor> 3 hours ago
@@ -95,9 +108,14 @@ const Meta = ({ author, comments }) => (
     </span>
     <Separator>|</Separator>
     <span>
-      <Anchor href="#">{comments} comments</Anchor>
+      <Anchor href="#">{commentsLength} comments</Anchor>
     </span>
   </MetaContainer>
 );
+
+Meta.propTypes = {
+  author: PropTypes.string.isRequired,
+  commentsLength: PropTypes.number.isRequired,
+};
 
 export default Link;

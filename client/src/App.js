@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components'; // eslint-disable-line
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Link from './components/Link';
@@ -27,13 +28,13 @@ const App = ({ data: { allLinks } }) => (
   <AppContainer>
     <LinkList>
       {allLinks
-        ? allLinks.map(link => (
-            <li>
+        ? allLinks.map((link, i) => (
+            <li key={i}>
               <Link
                 author={link.author ? link.author : 'anonymous'}
                 url={link.url}
                 description={link.description}
-                comments={link.comments.length}
+                commentsLength={link.comments.length}
                 score={link.score}
               />
             </li>
@@ -42,6 +43,10 @@ const App = ({ data: { allLinks } }) => (
     </LinkList>
   </AppContainer>
 );
+
+App.propTypes = {
+  data: PropTypes.object.isRequired,
+};
 
 export default graphql(gql`
   query AllLinksForHomepage {
