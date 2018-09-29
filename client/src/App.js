@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 // Relative imports
 import Link from './components/Link';
 import Header from './components/Header';
+import Sidebar from './components/Sidebar';
 
 const AppContainer = styled.div`
   display: flex;
@@ -47,24 +48,27 @@ const App = ({ data: { allLinks } }) => (
   <AppContainer>
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Header />
-      <Feed>
-        <LinkList>
-          {allLinks
-            ? allLinks.map((link, i) => (
-                <li key={i}>
-                  <Link
-                    _id={link._id}
-                    author={link.author ? link.author : 'anonymous'}
-                    url={link.url}
-                    description={link.description}
-                    commentsLength={link.comments.length}
-                    score={link.score}
-                  />
-                </li>
-              ))
-            : null}
-        </LinkList>
-      </Feed>
+      <div style={{ display: 'flex' }}>
+        <Feed>
+          <LinkList>
+            {allLinks
+              ? allLinks.map((link, i) => (
+                  <li key={i}>
+                    <Link
+                      _id={link._id}
+                      author={link.author ? link.author : 'anonymous'}
+                      url={link.url}
+                      description={link.description}
+                      commentsLength={link.comments.length}
+                      score={link.score}
+                    />
+                  </li>
+                ))
+              : null}
+          </LinkList>
+        </Feed>
+        <Sidebar />
+      </div>
     </div>
   </AppContainer>
 );
