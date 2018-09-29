@@ -1,10 +1,13 @@
 {
   "extends": [
     "airbnb-base",
-    "prettier"
+    "prettier",
+    "plugin:react/recommended"
   ],
   "parser": "babel-eslint",
   "rules": {
+    "no-return-await": 0,
+    "no-underscore-dangle": 0,
     "prettier/prettier": ["error", {
       "printWidth": 100,
       "singleQuote": true,
@@ -17,6 +20,7 @@
     "jest": true
   },
   "plugins": [
-    "prettier"
+    "prettier",
+    "react"
   ]
 }

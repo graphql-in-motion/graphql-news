@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the <Link /> component should look like this 1`] = `
+<div
+  style={
+    Object {
+      "alignItems": "center",
+      "display": "flex",
+    }
+  }
+>
+  <div
+    className="sc-htpNat iNpPag"
+  >
+    <div
+      className="sc-bxivhb iLWNZv"
+    >
+      <span
+        className="sc-ifAKCX coRGWX"
+        style={
+          Object {
+            "color": "#FF6600",
+          }
+        }
+      >
+        ▲
+      </span>
+    </div>
+    <span
+      className="sc-EHOje juxLGl"
+    >
+      275
+    </span>
+    <div
+      className="sc-bxivhb iLWNZv"
+    >
+      <span
+        className="sc-ifAKCX coRGWX"
+      >
+        ▼
+      </span>
+    </div>
+  </div>
+  <div
+    style={
+      Object {
+        "display": "inline-flex",
+        "flexDirection": "column",
+      }
+    }
+  >
+    <div>
+      <a
+        className="sc-bdVaJa kPQtlt"
+        href="#"
+      >
+        The internet's front door
+      </a>
+      <a
+        className="sc-bwzfXH fNPCXg"
+        href="#"
+      >
+        (
+        google.com
+        )
+      </a>
+    </div>
+    <div
+      className="sc-bZQynM dyAiHf"
+    >
+      <span>
+        by 
+        <a
+          className="sc-htoDjs eEVTBG"
+          href="#"
+        >
+          anonymous
+        </a>
+         3 hours ago
+      </span>
+      <span
+        className="sc-gzVnrw bAZDPE"
+      >
+        |
+      </span>
+      <span>
+        <a
+          className="sc-htoDjs eEVTBG"
+          href="#"
+        >
+          hide
+        </a>
+      </span>
+      <span
+        className="sc-gzVnrw bAZDPE"
+      >
+        |
+      </span>
+      <span>
+        <a
+          className="sc-htoDjs eEVTBG"
+          href="#"
+        >
+          70
+           comments
+        </a>
+      </span>
+    </div>
+  </div>
+</div>
+`;

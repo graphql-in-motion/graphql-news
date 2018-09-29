@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the graphql-news schema can query for a link with a given _id 1`] = `
+Object {
+  "link": Object {
+    "_id": "1",
+    "description": "example",
+    "score": 6,
+    "url": "https://example.com",
+  },
+}
+`;
+
+exports[`the graphql-news schema can query for a list of links 1`] = `
+Object {
+  "allLinks": Array [
+    Object {
+      "_id": "1",
+    },
+    Object {
+      "_id": "1",
+    },
+  ],
+}
+`;
+
+exports[`the graphql-news schema can query for a user with a given _id 1`] = `
+Object {
+  "user": Object {
+    "_id": "2",
+    "about": "lorem ipsum",
+    "username": "example",
+  },
+}
+`;
