@@ -10,6 +10,8 @@ const Count = styled.span`
   cursor: default;
   font-weight: bold;
   margin: 0.2em 0;
+  width: 26px;
+  text-align: center;
 `;
 
 const ScoreCount = ({ _id, score }) => (
