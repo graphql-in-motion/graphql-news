@@ -31,6 +31,7 @@ const App = ({ data: { allLinks } }) => (
         ? allLinks.map((link, i) => (
             <li key={i}>
               <Link
+                _id={link._id}
                 author={link.author ? link.author : 'anonymous'}
                 url={link.url}
                 description={link.description}
@@ -50,7 +51,7 @@ App.propTypes = {
 
 export default graphql(gql`
   query AllLinksForHomepage {
-    allLinks(first: 8, skip: 0) {
+    allLinks(first: 10, skip: 0) {
       _id
       url
       description

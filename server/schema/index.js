@@ -173,7 +173,7 @@ const mutationType = new GraphQLObjectType({
 
         const { score } = link.value;
 
-        pubsub.publish('Vote', { 'Vote': { score: score + 1 } }); // eslint-disable-line prettier/prettier
+        pubsub.publish('Vote', { 'Vote': { _id, score: score + 1 } }); // eslint-disable-line prettier/prettier
 
         return Links.findOne(ObjectId(_id));
       },
@@ -188,7 +188,7 @@ const mutationType = new GraphQLObjectType({
 
         const { score } = link.value;
 
-        pubsub.publish('Vote', { 'Vote': { score: score - 1 } }); // eslint-disable-line prettier/prettier
+        pubsub.publish('Vote', { 'Vote': { _id, score: score - 1 } }); // eslint-disable-line prettier/prettier
 
         return Links.findOne(ObjectId(_id));
       },

@@ -19,6 +19,6 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <App />
   </ApolloProvider>,
-  document.getElementById('root')
+  document.getElementById('root') // eslint-disable-line no-undef
 );
 registerServiceWorker();
