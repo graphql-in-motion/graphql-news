@@ -1,5 +1,5 @@
 # GraphQL News  
-This repository serves as the boilerplate for the GraphQL API that we'll construct together in [GraphQL in Motion](https://livevideo.manning.com/course/32/graphql-in-motion)
+This repository will serve as the finished product for the GraphQL News API & Client built in the [GraphQL in Motion](https://www.manning.com/livevideo/graphql-in-motion) video course.
 
 ### Installation
 ```sh
