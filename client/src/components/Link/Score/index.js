@@ -24,7 +24,6 @@ const Score = ({ _id, score }) => (
 Score.propTypes = {
   _id: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
-  client: PropTypes.object.isRequired,
 };
 
 export default Score;

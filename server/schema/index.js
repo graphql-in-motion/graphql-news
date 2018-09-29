@@ -173,7 +173,7 @@ const mutationType = new GraphQLObjectType({
 
         const { score } = link.value;
 
-        pubsub.publish('Vote', { 'Vote': { _id, score: score + 1 } }); // eslint-disable-line prettier/prettier
+        pubsub.publish('linkVoted', { 'linkVoted': { _id, score: score + 1 } }); // eslint-disable-line prettier/prettier
 
         return Links.findOne(ObjectId(_id));
       },
@@ -188,7 +188,7 @@ const mutationType = new GraphQLObjectType({
 
         const { score } = link.value;
 
-        pubsub.publish('Vote', { 'Vote': { _id, score: score - 1 } }); // eslint-disable-line prettier/prettier
+        pubsub.publish('linkVoted', { 'linkVoted': { _id, score: score - 1 } }); // eslint-disable-line prettier/prettier
 
         return Links.findOne(ObjectId(_id));
       },
@@ -199,9 +199,12 @@ const mutationType = new GraphQLObjectType({
 const subscriptionType = new GraphQLObjectType({
   name: 'Subscription',
   fields: () => ({
-    Vote: {
+    linkVoted: {
       type: linkType,
-      subscribe: () => pubsub.asyncIterator('Vote'),
+      args: {
+        _id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      subscribe: () => pubsub.asyncIterator('linkVoted'),
     },
   }),
 });

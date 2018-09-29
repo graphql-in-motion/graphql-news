@@ -16,9 +16,10 @@ const Arrow = styled.span`
 
 const UpvoteButton = ({ _id, client }) => {
   function upvoteLink() {
+    console.log(client);
     return client.mutate({
       mutation: gql`
-        mutation UpvoteLink($_id: _id) {
+        mutation UpvoteLink($_id: ID!) {
           upvoteLink(_id: $_id) {
             _id
           }

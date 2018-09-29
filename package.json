@@ -41,7 +41,6 @@
     "mongodb": "^3.0.1",
     "nodemon": "^1.14.11",
     "prettier": "^1.10.2",
-    "styled-components": "^3.0.2",
     "subscriptions-transport-ws": "^0.9.9"
   }
 }
