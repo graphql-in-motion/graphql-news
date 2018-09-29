@@ -19,7 +19,7 @@ const DownvoteButton = ({ _id, client }) => {
   function downvoteLink() {
     return client.mutate({
       mutation: gql`
-        mutation DownvoteLink($_id: _id) {
+        mutation DownvoteLink($_id: ID!) {
           downvoteLink(_id: $_id) {
             _id
           }

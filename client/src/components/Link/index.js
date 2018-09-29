@@ -19,12 +19,12 @@ const Url = styled.a`
 `;
 
 const Link = ({ _id, author, url, description, commentsLength, score }) => (
-  <div style={{ display: 'flex', alignItems: 'center' }}>
+  <div style={{ display: 'flex', alignItems: 'center', margin: '0 1em' }}>
     <ScoreHOC _id={_id} score={score} />
     <div style={{ display: 'inline-flex', flexDirection: 'column' }}>
       <div>
-        <Title href="#">{description}</Title>
-        <Url href="#">({url.replace(/(^\w+:|^)\/\//, '')})</Url>
+        <Title href={url}>{description}</Title>
+        <Url href={url}>({url.replace(/(^\w+:|^)\/\//, '')})</Url>
       </div>
       <Meta author={author} commentsLength={commentsLength} />
     </div>
