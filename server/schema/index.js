@@ -10,7 +10,9 @@ import {
 } from 'graphql';
 import { ObjectId } from 'mongodb';
 import { PubSub } from 'graphql-subscriptions';
-import { linkType, userType, commentsType, provider, signInPayload } from './typeDefs';
+import bcrypt from 'bcrypt';
+import jsonwebtoken from 'jsonwebtoken';
+import { linkType, userType, commentsType, AuthProvider, signInPayload } from './typeDefs';
 
 const pubsub = new PubSub();
 
@@ -133,13 +135,15 @@ const mutationType = new GraphQLObjectType({
         // No empty usernames
         username: { type: new GraphQLNonNull(GraphQLString) },
         // We can't create a user without the proper credentials
-        authProvider: { type: new GraphQLNonNull(provider) },
+        provider: { type: new GraphQLNonNull(AuthProvider) },
       },
-      resolve: async (_, { username, authProvider }, { db: { Users } }) => {
+      resolve: async (_, { username, provider }, { db: { Users } }) => {
+        const hash = await bcrypt.hash(provider.password, 10);
+
         const newUser = {
           username,
-          email: authProvider.email,
-          password: authProvider.password,
+          email: provider.email,
+          password: hash,
         };
         const response = await Users.insert(newUser);
 
@@ -150,16 +154,32 @@ const mutationType = new GraphQLObjectType({
       type: signInPayload,
       args: {
         // We can't sign in a user w/o credentials
-        authProvider: { type: new GraphQLNonNull(provider) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve: async (_, { authProvider }, { db: { Users } }) => {
-        const user = await Users.findOne({ email: authProvider.email });
+      resolve: async (_, { email, password }, { db: { Users } }) => {
+        const user = await Users.findOne({ email });
 
-        if (authProvider.password === user.password) {
-          return { token: `token-${user.email}`, user };
+        if (!user) {
+          throw new Error('No user exists with that email address.');
         }
 
-        return null;
+        const valid = await bcrypt.compare(password, user.password);
+
+        if (!valid) {
+          throw new Error('Incorrect password. Please try again.');
+        }
+
+        const token = jsonwebtoken.sign(
+          {
+            id: user._id,
+            email: user.email,
+          },
+          'superdupersecret',
+          { expiresIn: '3w' }
+        );
+
+        return { token, user };
       },
     },
     upvoteLink: {
@@ -168,7 +188,11 @@ const mutationType = new GraphQLObjectType({
         // We can't vote on a link w/o its ID
         _id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve: async (_, { _id }, { db: { Links } }) => {
+      resolve: async (_, { _id }, { user, db: { Links } }) => {
+        if (!user) {
+          throw new Error('You must be logged in to vote');
+        }
+
         const link = await Links.findOneAndUpdate({ _id: ObjectId(_id) }, { $inc: { score: 1 } });
 
         const { score } = link.value;
@@ -183,7 +207,11 @@ const mutationType = new GraphQLObjectType({
       args: {
         _id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve: async (_, { _id }, { db: { Links } }) => {
+      resolve: async (_, { _id }, { user, db: { Links } }) => {
+        if (!user) {
+          throw new Error('You must be logged in to vote');
+        }
+
         const link = await Links.findOneAndUpdate({ _id: ObjectId(_id) }, { $inc: { score: -1 } });
 
         const { score } = link.value;

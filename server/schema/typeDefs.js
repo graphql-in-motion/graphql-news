@@ -80,8 +80,8 @@ export const linkType = new GraphQLObjectType({
   }),
 });
 
-export const provider = new GraphQLInputObjectType({
-  name: 'authProvider',
+export const AuthProvider = new GraphQLInputObjectType({
+  name: 'AuthProvider',
   fields: {
     email: { type: new GraphQLNonNull(GraphQLString) },
     password: { type: new GraphQLNonNull(GraphQLString) },

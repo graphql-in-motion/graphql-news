@@ -7,11 +7,13 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
 import { getMainDefinition } from 'apollo-utilities';
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom';
+import { setContext } from 'apollo-link-context';
 // Relative imports
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import './scss/index.scss';
+import { AUTH_TOKEN } from './constants';
 
 // WebSocket endpoint (used for subscriptions)
 const wsLink = new WebSocketLink({
@@ -38,9 +40,19 @@ const link = split(
   httpLink
 );
 
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem(AUTH_TOKEN);
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : ''
+    }
+  }
+})
+
 // The Apollo client
 const client = new ApolloClient({
-  link,
+  link: authLink.concat(link),
   cache: new InMemoryCache(),
 });
 

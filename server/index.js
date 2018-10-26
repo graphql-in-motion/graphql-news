@@ -6,16 +6,21 @@ import { execute, subscribe } from 'graphql';
 import { createServer } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 // Schema
 import schema from './schema';
 // Local utility files
-import auth from './utils/auth';
 import buildDataloaders from './utils/dataloader';
 
 // Global constants
 const MONGO_URL = 'mongodb://localhost:27017/test';
 const PORT = 4000;
 const WS_PORT = 4040;
+
+const authMiddleware = jwt({
+  secret: 'superdupersecret',
+  credentialsRequired: false,
+});
 
 const start = async () => {
   const app = express();
@@ -32,21 +37,8 @@ const start = async () => {
         Comments: response.collection('comments'),
       };
 
-      const buildOptions = async req => {
-        const user = await auth(req, db.Users);
-
-        return {
-          context: {
-            dataloaders: buildDataloaders(db),
-            db,
-            user,
-          },
-          schema,
-          graphiql: true,
-          subscriptionsEndpoint: `ws://localhost:${WS_PORT}/subscriptions`,
-        };
-      };
-
+      app.use(bodyParser.json());
+      app.use(authMiddleware);
       app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header(
@@ -55,16 +47,20 @@ const start = async () => {
         );
         next();
       });
-
       app.use(
         '/graphql',
-        jwt({
-          secret: 'token-example@gmail.com',
-          requestProperty: 'auth',
-          credentialsRequired: false,
-        })
+        cors(),
+        graphqlHTTP(req => ({
+          context: {
+            dataloaders: buildDataloaders(db),
+            db,
+            user: req.user,
+          },
+          schema,
+          graphiql: true,
+          subscriptionsEndpoint: `ws://localhost:${WS_PORT}/subscriptions`,
+        }))
       );
-      app.use('/graphql', cors(), graphqlHTTP(buildOptions));
 
       app.listen(PORT, () => {
         console.log(`Running a GraphQL API server at localhost:${PORT}/graphql`); // eslint-disable-line no-console

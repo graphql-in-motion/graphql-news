@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 'use strict';
 
 const autoprefixer = require('autoprefixer');
