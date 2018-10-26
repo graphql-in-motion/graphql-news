@@ -1,24 +1,9 @@
 /* eslint-disable no-script-url */
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-const Wrapper = styled.div`
-  display: flex;
-  margin-top: 0.25em;
-  color: #848584;
-
-  a {
-    color: inherit;
-
-    &:hover {
-      color: #dc2396;
-    }
-  }
-`;
 
 const Meta = ({ author, commentsLength }) => (
-  <Wrapper>
+  <div className="meta-wrapper">
     <span>
       by <a href="javascript:void(0);">{author}</a> 3 hours ago
     </span>
@@ -30,7 +15,7 @@ const Meta = ({ author, commentsLength }) => (
     <span>
       <a href="javascript:void(0);">{commentsLength} comments</a>
     </span>
-  </Wrapper>
+  </div>
 );
 
 Meta.propTypes = {

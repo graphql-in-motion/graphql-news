@@ -1,0 +1,27 @@
+@import "./globals";
+
+%button-shared {
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.downvote-button {
+  @extend %button-shared;
+
+  svg {
+    transform: rotate(180deg);
+
+    path {
+      fill: $gullGrey;
+    }
+  }
+}
+
+.upvote-button {
+  @extend %button-shared;
+
+  svg > path {
+    fill: $gullGrey;
+  }
+}

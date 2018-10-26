@@ -1,0 +1,43 @@
+//  Fonts
+$font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+$font-size: 14px;
+
+// Colors
+$gullGrey: #A0AAB7;
+$royalFuchsia: #DC2396;
+$pickledBluewood: #34495E;
+$solitude: #ECEEF1;
+
+// UI
+%flex-base {
+  display: flex;
+}
+
+%flex-base-justify-center {
+  display: flex;
+  justify-content: center;
+}
+
+%flex-base-align-center {
+  display: flex;
+  align-items: center;
+}
+
+%flex-base-center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Utility classes
+.flex {
+  display: flex;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.flex-direction-row {
+  flex-direction: row;
+}

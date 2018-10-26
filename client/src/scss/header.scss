@@ -1,0 +1,19 @@
+@import "./globals";
+
+.header-wrapper {
+  width: 100%;
+}
+
+.header {
+  @extend %flex-base-justify-center;
+  background-color: $royalFuchsia;
+  padding: 1em 0;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+}
+
+.header-content {
+  @extend %flex-base-justify-center;
+  width: 800px;
+}

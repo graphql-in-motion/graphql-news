@@ -10,7 +10,7 @@ import { getMainDefinition } from 'apollo-utilities';
 // Relative imports
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import './reset.css';
+import './scss/index.scss';
 
 // WebSocket endpoint (used for subscriptions)
 const wsLink = new WebSocketLink({
@@ -44,7 +44,7 @@ const client = new ApolloClient({
 });
 
 ReactDOM.render(
-  <ApolloProvider client={client} style={{ height: '100%', width: '100%' }}>
+  <ApolloProvider client={client} className="apollo-provider">
     <App />
   </ApolloProvider>,
   document.getElementById('root') // eslint-disable-line no-undef

@@ -1,0 +1,29 @@
+@import "./globals";
+
+/*
+ * Required
+ */
+body, html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  overflow: auto;
+}
+
+.apollo-provider {
+  height: 100%;
+  width: 100%;
+}
+
+.app-container {
+  background-color: $solitude;
+  display: flex;
+  font-size: $font-size;
+  font-family: $font-stack;
+  height: 100%;
+  justify-content: center;
+  overflow: scroll;
+}
+

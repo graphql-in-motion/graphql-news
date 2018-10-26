@@ -1,30 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 import ScoreHOC from './Score';
 import Meta from './Meta';
 
-const Title = styled.a`
-  color: #34495e;
-  text-decoration: none;
-  font-size: 1.2em;
-`;
-
-const Url = styled.a`
-  font-size: 0.8em;
-  color: #848584;
-  margin: 0 0 0 0.25em;
-  text-decoration: none;
-`;
-
 const Link = ({ _id, author, url, description, commentsLength, score }) => (
-  <div style={{ display: 'flex', alignItems: 'center', margin: '0 2em 0 0', minWidth: '720px' }}>
+  <div className="link-wrapper">
     <ScoreHOC _id={_id} score={score} />
-    <div style={{ display: 'inline-flex', flexDirection: 'column' }}>
+    <div className="link-title-wrapper" style={{ display: 'inline-flex', flexDirection: 'column' }}>
       <div>
-        <Title href={url}>{description}</Title>
-        <Url href={url}>({url.replace(/(^\w+:|^)\/\//, '')})</Url>
+        <a className="link-title" href={url}>{description}</a>
+        <a className="link-portal" href={url}>({url.replace(/(^\w+:|^)\/\//, '')})</a>
       </div>
       <Meta author={author} commentsLength={commentsLength} />
     </div>
