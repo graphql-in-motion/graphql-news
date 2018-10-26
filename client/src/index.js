@@ -7,6 +7,7 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
 import { getMainDefinition } from 'apollo-utilities';
+import { BrowserRouter } from 'react-router-dom'
 // Relative imports
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
@@ -43,10 +44,14 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-ReactDOM.render(
-  <ApolloProvider client={client} className="apollo-provider">
-    <App />
-  </ApolloProvider>,
-  document.getElementById('root') // eslint-disable-line no-undef
+const Root = () => (
+  <BrowserRouter>
+    <ApolloProvider client={client} className="apollo-provider">
+      <App />
+    </ApolloProvider>
+  </BrowserRouter>
 );
+
+ReactDOM.render(<Root />, document.getElementById('root')); // eslint-disable-line no-undef
+
 registerServiceWorker();
