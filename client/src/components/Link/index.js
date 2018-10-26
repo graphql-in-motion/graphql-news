@@ -19,7 +19,7 @@ const Url = styled.a`
 `;
 
 const Link = ({ _id, author, url, description, commentsLength, score }) => (
-  <div style={{ display: 'flex', alignItems: 'center', margin: '0 1em', minWidth: '600px' }}>
+  <div style={{ display: 'flex', alignItems: 'center', margin: '0 2em 0 0', minWidth: '720px' }}>
     <ScoreHOC _id={_id} score={score} />
     <div style={{ display: 'inline-flex', flexDirection: 'column' }}>
       <div>

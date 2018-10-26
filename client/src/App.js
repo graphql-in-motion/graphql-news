@@ -6,7 +6,6 @@ import gql from 'graphql-tag';
 // Relative imports
 import Link from './components/Link';
 import Header from './components/Header';
-import Sidebar from './components/Sidebar';
 
 const AppContainer = styled.div`
   display: flex;
@@ -67,7 +66,6 @@ const App = ({ data: { allLinks } }) => (
               : null}
           </LinkList>
         </Feed>
-        <Sidebar />
       </div>
     </div>
   </AppContainer>

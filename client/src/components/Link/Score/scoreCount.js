@@ -5,13 +5,13 @@ import { withApollo, Subscription } from 'react-apollo';
 import gql from 'graphql-tag';
 
 const Count = styled.span`
-  color: #34495e;
-  // color: #de1797;
-  cursor: default;
-  font-weight: bold;
+  color: #dc2396;
+  font-weight: 700;
   margin: 0.2em 0;
+  letter-spacing: -0.02em;
   width: 26px;
   text-align: center;
+  font-size: 14px;
 `;
 
 const ScoreCount = ({ _id, score }) => (

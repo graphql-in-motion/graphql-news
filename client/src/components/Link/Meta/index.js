@@ -12,7 +12,7 @@ const Wrapper = styled.div`
     color: inherit;
 
     &:hover {
-      color: #ff6600;
+      color: #dc2396;
     }
   }
 `;

@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 1em 0 0;
+  margin: 1em 2em;
 `;
 
 const Score = ({ _id, score }) => (
