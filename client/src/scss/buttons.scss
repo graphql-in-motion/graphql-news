@@ -28,7 +28,7 @@
 
 %ui-button-shared {
   border: none;
-  border-radius: 3px;
+  border-radius: 4px;
   color: white;
   cursor: pointer;
   font-size: 12px;
@@ -37,17 +37,37 @@
   padding: 8px 14px;
 }
 
+%ui-text-button-shared {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: $font-size;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-right: 2em;
+
+  &:hover {
+    color: white;
+  }
+}
+
 /**
  * Header
  */
-.login-button {
-  @extend %ui-button-shared;
-  background-color: $gullGrey;
-}
-
+.login-button,
 .logout-button {
-  @extend %ui-button-shared;
-  background-color: #90155F;
+  @extend %ui-text-button-shared;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-right: 1.5em;
+
+  &:hover {
+    color: white;
+  }
 }
 
 /**
