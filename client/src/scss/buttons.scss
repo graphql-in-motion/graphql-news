@@ -25,3 +25,46 @@
     fill: $gullGrey;
   }
 }
+
+%ui-button-shared {
+  border: none;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  outline: none;
+  padding: 8px 14px;
+}
+
+/**
+ * Header
+ */
+.login-button {
+  @extend %ui-button-shared;
+  background-color: $gullGrey;
+}
+
+.logout-button {
+  @extend %ui-button-shared;
+  background-color: #90155F;
+}
+
+/**
+ * Login Form
+ */
+ .login-hero-button {
+  @extend %ui-button-shared;
+  background-color: $royalFuchsia;
+}
+
+.pointer-button {
+  background-color: transparent;
+  border: none;
+  color: $gullGrey;
+  cursor: pointer;
+  font-weight: 500;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}

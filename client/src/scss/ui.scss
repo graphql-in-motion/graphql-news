@@ -2,3 +2,9 @@
   @extend %flex-base-align-center;
   width: 100%;
 }
+
+.page-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 1em;
+}

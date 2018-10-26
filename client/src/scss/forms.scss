@@ -1,0 +1,33 @@
+@import "./globals";
+
+.login-form-wrapper {
+  @extend %flex-base-justify-center;
+  background-color: white;
+  border-radius: 3px;
+  margin-top: 7em;
+  min-width: 800px;
+  padding: 2em 1em;
+}
+
+.login-form-content {
+  max-width: 400px;
+}
+
+.login-form-field {
+  background: #fff;
+  border-radius: 3px;
+  border: 1px solid #eceef1;
+  box-sizing: border-box;
+  color: #828b98;
+  font-family: inherit;
+  font-size: 13px;
+  margin-bottom: 1.5em;
+  outline: none;
+  padding: 11px 12px;
+  transition: all .1s ease-in;
+  width: 100%;
+}
+
+.login-form-button-group {
+  justify-content: space-between;
+}

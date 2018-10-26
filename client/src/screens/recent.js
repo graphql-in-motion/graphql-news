@@ -6,12 +6,17 @@ import gql from 'graphql-tag';
 import Header from '../components/Header';
 import Feed from '../components/Feed';
 
-const RecentLinks = ({ data: { allLinks } }) => (
-  <div className="screen-wrapper flex-direction-column">
-    <Header />
-    <Feed links={allLinks} />
-  </div>
-);
+const RecentLinks = (props) => {
+  const { data: { allLinks } } = props;
+  console.log(props);
+
+  return (
+    <div className="screen-wrapper flex-direction-column">
+      <Header history={props.history} />
+      <Feed links={allLinks} />
+    </div>
+  );
+}
 
 RecentLinks.propTypes = {
   data: PropTypes.object.isRequired,

@@ -4,28 +4,30 @@ import { Link } from 'react-router-dom';
 import Tower from '../Svg/tower';
 import { AUTH_TOKEN } from '../../constants';
 
-const Header = () => {
+const Header = ({ history }) => {
   const authToken = localStorage.getItem(AUTH_TOKEN);
 
   return (
     <div className="header-wrapper">
       <header className="header">
-        <div className="header-content">
-          <Tower />
+        <div className="flex header-content">
+          <Link to="/">
+            <Tower />
+          </Link>
           <div className="login-context-wrapper">
             {authToken ? (
               <button
                 className="logout-button"
                 onClick={() => {
                   localStorage.removeItem(AUTH_TOKEN)
-                  this.props.history.push(`/`)
+                  history.push(`/`)
                 }}
               >
                 Logout
               </button>
             ) : (
               <Link to="/login" className="ml1 no-underline black">
-                Login
+                <button className="login-button">Login</button>
               </Link>
             )}
           </div>
