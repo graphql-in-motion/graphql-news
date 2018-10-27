@@ -19,10 +19,8 @@ const MutationType = new GraphQLObjectType({
     createComment: {
       type: CommentType,
       args: {
-        // Comments must have a parent link
         link: { type: new GraphQLNonNull(GraphQLID) },
         parent: { type: GraphQLID },
-        // No empty comments
         content: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: async (_, data, { db: { Comments }, user }) => {
@@ -30,9 +28,20 @@ const MutationType = new GraphQLObjectType({
           throw new Error('You must be logged in to comment');
         }
 
-        const response = await Comments.insert(data);
+        const { link, content, parent } = data;
 
-        return Object.assign({ _id: response.insertedIds[0] }, data);
+        const comment = {
+          author: ObjectId(user._id),
+          comments: [],
+          content,
+          created_at: Date.now().toString(),
+          link: ObjectId(link),
+          parent: parent ? ObjectId(parent) : null,
+        };
+
+        const response = await Comments.insert(comment);
+
+        return Object.assign({ _id: response.insertedIds[0] }, comment);
       },
     },
     createLink: {

@@ -9,9 +9,7 @@ const CommentType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: new GraphQLNonNull(GraphQLID) },
     link: {
-      // Because of the way the lazy evaluation works on the `fields` object, we can reference the
-      // Link type before it is defined
-      type: LinkType, // eslint-disable-line no-use-before-define
+      type: LinkType,
       resolve: async ({ link }, data, { db: { Links } }) => await Links.findOne(ObjectId(link)),
     },
     parent: {
@@ -29,13 +27,12 @@ const CommentType = new GraphQLObjectType({
     author: {
       type: UserType,
       args: {
-        // We shouldn't be able to query for an author w/o knowing their ID
         author: { type: GraphQLID },
       },
       resolve: async ({ author }, data, { db: { Users } }) => await Users.findOne(ObjectId(author)),
     },
-    // The body of the comment should be non-null. We don't want people posting empty comments
     content: { type: new GraphQLNonNull(GraphQLString) },
+    created_at: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
 

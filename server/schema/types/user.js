@@ -1,13 +1,25 @@
-import { GraphQLID, GraphQLObjectType, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLID, GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
+
+import CommentType from './comment';
+import LinkType from './link';
 
 const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    // _id should *never* be null
     _id: { type: new GraphQLNonNull(GraphQLID) },
-    // No empty usernames
-    username: { type: new GraphQLNonNull(GraphQLString) },
     about: { type: GraphQLString },
+    comments: {
+      type: new GraphQLList(CommentType),
+      resolve: async ({ _id }, data, { db: { Comments } }) =>
+        await Comments.find({ author: _id }).toArray(),
+    },
+    created_at: { type: new GraphQLNonNull(GraphQLString) },
+    links: {
+      type: new GraphQLList(LinkType),
+      resolve: async ({ _id }, data, { db: { Links } }) =>
+        await Links.find({ author: _id }).toArray(),
+    },
+    username: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
 

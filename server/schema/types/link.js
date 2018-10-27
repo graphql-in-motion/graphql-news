@@ -24,10 +24,8 @@ export const LinkType = new GraphQLObjectType({
     },
     comments: {
       type: new GraphQLList(CommentType),
-      resolve: async ({ _id }, data, { db: { Comments } }) => {
-        const comments = await Comments.find({}).toArray();
-        return comments.filter(i => i.parent === _id.toString());
-      },
+      resolve: async ({ _id }, data, { db: { Comments } }) =>
+        await Comments.find({ link: ObjectId(_id) }).toArray(),
     },
     created_at: { type: GraphQLString },
     description: { type: GraphQLString },

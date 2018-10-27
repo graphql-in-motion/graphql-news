@@ -13,7 +13,7 @@ const RecentLinks = (props) => {
   return (
     <div className="screen-wrapper flex-direction-column">
       <Header history={props.history} />
-      <Feed links={allLinks} />
+      <Feed links={allLinks ? allLinks.reverse() : []} />
     </div>
   );
 }
