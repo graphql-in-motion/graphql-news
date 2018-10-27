@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { AUTH_TOKEN } from '../../constants';
+import { AUTH_TOKEN } from '../../../constants';
 
 const SIGNUP_MUTATION = gql`
   mutation SignupMutation($username: String!, $email: String!, $password: String!) {
