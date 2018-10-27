@@ -17,6 +17,9 @@ const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     signInUser(email: $email, password: $password) {
       token
+      user {
+        _id
+      }
     }
   }
 `;
@@ -87,18 +90,19 @@ class LoginForm extends Component {
                 ? 'Need to create an account?'
                 : 'Already have an account?'}
             </button>
-            <Mutation
-              mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
-              variables={{ username, email, password }}
-              onCompleted={data => this._confirmLogin(data)}
-            >
-              {mutation => (
-              <button
-                className="login-hero-button"
-                onClick={mutation}
-              >
-                {login ? 'Login' : 'Sign Up'}
-              </button>
+            <Mutation mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION} onCompleted={data => this._confirmLogin(data)}>
+              {mutate => (
+                <button
+                  className="login-hero-button"
+                  onClick={() => (
+                    mutate({
+                      variables: { username, email, password },
+                      update: (store, { data: { signInUser: { user }} }) => store.writeData({ data: { user: user.id} })
+                    })
+                  )}
+                >
+                  {login ? 'Login' : 'Sign Up'}
+                </button>
               )}
             </Mutation>
           </div>
@@ -107,5 +111,27 @@ class LoginForm extends Component {
     );
   }
 };
+
+// const CommentsPageWithMutations = () => (
+//   <Mutation mutation={SUBMIT_COMMENT_MUTATION}>
+//     {mutate => {
+//       <AddComment
+//         submit={({ repoFullName, commentContent }) =>
+//           mutate({
+//             variables: { repoFullName, commentContent },
+//             update: (store, { data: { submitComment } }) => {
+//               // Read the data from our cache for this query.
+//               const data = store.readQuery({ query: CommentAppQuery });
+//               // Add our comment from the mutation to the end.
+//               data.comments.push(submitComment);
+//               // Write our data back to the cache.
+//               store.writeQuery({ query: CommentAppQuery, data });
+//             }
+//           })
+//         }
+//       />;
+//     }}
+//   </Mutation>
+// );
 
 export default LoginForm;

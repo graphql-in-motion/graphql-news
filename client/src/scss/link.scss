@@ -43,6 +43,8 @@
 .link-wrapper {
   @extend %flex-base-align-center;
   margin: 0 2em 0 0;
+  padding-top: 0;
+  padding-bottom: 7px;
   min-width: 800px;
 }
 
@@ -62,4 +64,14 @@
   font-size: 12px;
   margin: 0 0 0 0.25em;
   text-decoration: none;
+}
+
+.link-screen-wrapper {
+  background-color: white;
+  border-radius: 4px;
+  display: table;
+  overflow: auto;
+  margin-top: 7em;
+  margin-bottom: 4em;
+  padding: 0.5em 0;
 }

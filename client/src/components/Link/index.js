@@ -12,7 +12,7 @@ const Link = ({ _id, author, url, description, commentsLength, score }) => (
         <a className="link-title" href={url}>{description}</a>
         <a className="link-portal" href={url}>({url.replace(/(^\w+:|^)\/\//, '')})</a>
       </div>
-      <Meta author={author} commentsLength={commentsLength} />
+      <Meta _id={_id} author={author} commentsLength={commentsLength} />
     </div>
   </div>
 );

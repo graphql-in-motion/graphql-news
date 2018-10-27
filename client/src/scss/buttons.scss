@@ -88,3 +88,14 @@
   margin: 0;
   padding: 0;
 }
+
+/**
+ * Comment Form
+ */
+.comment-button {
+  @extend %ui-button-shared;
+  background-color: #3275D6;
+  letter-spacing: -0.02em;
+  padding: 10px 15px 11px;
+  font-size: 12px;
+}
