@@ -5955,6 +5955,12 @@ react-apollo@^2.1.9:
     lodash "^4.17.10"
     prop-types "^15.6.0"
 
+react-blockies@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-blockies/-/react-blockies-1.4.0.tgz#4a23927c8c2368df569054778e732dc9d32342ab"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-dev-utils@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-5.0.1.tgz#1f396e161fe44b595db1b186a40067289bf06613"

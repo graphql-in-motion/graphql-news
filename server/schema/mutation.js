@@ -1,8 +1,10 @@
+/* globals fetch */
 import { GraphQLID, GraphQLObjectType, GraphQLNonNull, GraphQLString } from 'graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
+import 'isomorphic-fetch';
 
 import LinkType from './types/link';
 import UserType from './types/user';
@@ -36,27 +38,43 @@ const MutationType = new GraphQLObjectType({
     createLink: {
       type: LinkType,
       args: {
-        // No empty URLs
         url: { type: new GraphQLNonNull(GraphQLString) },
-        description: { type: GraphQLString },
       },
-      resolve: async (_, data, { db: { Links }, user }) => {
+      resolve: async (_, { url }, { db: { Links }, user }) => {
         if (!user) {
-          throw new Error('You must be logged in to submit links');
+          throw new Error('You must be logged in to vote');
         }
 
-        const link = Object.assign(
-          {
-            author: user && user._id, // The signed in user is our author
-            score: 0,
-            comments: [],
-          },
-          data
-        );
+        let linkTitle;
+
+        const getTitle = async qs =>
+          await fetch(`https://mercury.postlight.com/parser?url=${qs}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': 'cHI79Z6O2dAzC5HhruDfYpbgyhlo3VFVMUe87CKF',
+            },
+          })
+            .then(response => response.json())
+            .then(response => {
+              const { title } = response;
+
+              linkTitle = title;
+            });
+
+        await getTitle(url);
+
+        const link = {
+          author: user._id,
+          created_at: Date.now().toString(),
+          score: 0,
+          comments: [],
+          description: linkTitle,
+          url,
+        };
 
         const response = await Links.insert(link);
 
-        return Object.assign({ _id: response.insertedIds[0] }, data);
+        return Object.assign({ _id: response.insertedIds[0] }, link);
       },
     },
     createUser: {

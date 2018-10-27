@@ -13,10 +13,11 @@ import LinkType from './types/link';
 import UserType from './types/user';
 import CommentType from './types/comment';
 
-const linkFilter = new GraphQLInputObjectType({
-  name: 'linkFilter',
+const LinkFilter = new GraphQLInputObjectType({
+  name: 'LinkFilter',
   fields: () => ({
-    urlContains: { type: new GraphQLNonNull(GraphQLString) },
+    top: { type: GraphQLInt },
+    urlContains: { type: GraphQLString },
   }),
 });
 
@@ -59,12 +60,32 @@ const QueryType = new GraphQLObjectType({
     filterLinks: {
       type: new GraphQLList(LinkType),
       args: {
-        filter: { type: linkFilter },
+        filter: { type: LinkFilter },
       },
       resolve: async (_, { filter }, { db: { Links } }) => {
-        const { urlContains } = filter;
+        const { urlContains, top } = filter;
 
-        return await Links.find({ url: { $regex: `.*${urlContains}.*` } }).toArray();
+        if (urlContains) {
+          return await Links.find({ url: { $regex: `.*${urlContains}.*` } }).toArray();
+        }
+
+        if (top) {
+          const linksArr = await Links.find({}).toArray();
+
+          const compareScore = (a, b) => {
+            if (a.score > b.score) {
+              return -1;
+            }
+            if (a.score < b.score) {
+              return 1;
+            }
+            return 0;
+          };
+
+          return linksArr.sort(compareScore).slice(0, top);
+        }
+
+        return null;
       },
     },
     allUsers: {

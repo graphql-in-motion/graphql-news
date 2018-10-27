@@ -7,6 +7,7 @@ import { createServer } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import 'dotenv';
 // Schema
 import schema from './schema';
 // Local utility files

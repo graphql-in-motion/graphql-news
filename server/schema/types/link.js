@@ -15,9 +15,6 @@ export const LinkType = new GraphQLObjectType({
   name: 'Link',
   fields: () => ({
     _id: { type: new GraphQLNonNull(GraphQLID) },
-    // No empty URLs
-    url: { type: new GraphQLNonNull(GraphQLString) },
-    description: { type: GraphQLString },
     author: {
       type: UserType,
       args: {
@@ -32,7 +29,10 @@ export const LinkType = new GraphQLObjectType({
         return comments.filter(i => i.parent === _id.toString());
       },
     },
+    created_at: { type: GraphQLString },
+    description: { type: GraphQLString },
     score: { type: GraphQLInt },
+    url: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
 

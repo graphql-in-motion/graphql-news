@@ -49,6 +49,7 @@
     "raf": "3.4.0",
     "react": "^16.4.1",
     "react-apollo": "^2.1.9",
+    "react-blockies": "^1.4.0",
     "react-dev-utils": "^5.0.1",
     "react-dom": "^16.4.1",
     "react-test-renderer": "^16.4.2",
