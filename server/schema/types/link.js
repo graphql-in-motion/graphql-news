@@ -27,7 +27,7 @@ export const LinkType = new GraphQLObjectType({
       resolve: async ({ _id }, data, { db: { Comments } }) =>
         await Comments.find({ link: ObjectId(_id) }).toArray(),
     },
-    created_at: { type: GraphQLString },
+    created_at: { type: new GraphQLNonNull(GraphQLString) },
     description: { type: GraphQLString },
     score: { type: GraphQLInt },
     url: { type: new GraphQLNonNull(GraphQLString) },

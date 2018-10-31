@@ -1,19 +1,17 @@
 import { GraphQLID, GraphQLObjectType, GraphQLNonNull } from 'graphql';
-import { PubSub } from 'graphql-subscriptions';
 
 import LinkType from './types/link';
-
-const pubsub = new PubSub();
+import { LINK_VOTED, pubsub } from '../constants';
 
 const SubscriptionType = new GraphQLObjectType({
   name: 'Subscription',
   fields: () => ({
-    linkVoted: {
+    vote: {
       type: LinkType,
       args: {
         _id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      subscribe: () => pubsub.asyncIterator('linkVoted'),
+      subscribe: () => pubsub.asyncIterator(LINK_VOTED),
     },
   }),
 });

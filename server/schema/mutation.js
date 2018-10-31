@@ -1,17 +1,16 @@
 /* globals fetch */
 import { GraphQLID, GraphQLObjectType, GraphQLNonNull, GraphQLString } from 'graphql';
-import { PubSub } from 'graphql-subscriptions';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import 'isomorphic-fetch';
+import dayjs from 'dayjs';
 
 import LinkType from './types/link';
 import UserType from './types/user';
 import CommentType from './types/comment';
 import { AuthProvider, SignInPayload } from './types/auth';
-
-const pubsub = new PubSub();
+import { LINK_VOTED, pubsub } from '../constants';
 
 const MutationType = new GraphQLObjectType({
   name: 'Mutation',
@@ -34,7 +33,7 @@ const MutationType = new GraphQLObjectType({
           author: ObjectId(user._id),
           comments: [],
           content,
-          created_at: Date.now().toString(),
+          created_at: dayjs(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
           link: ObjectId(link),
           parent: parent ? ObjectId(parent) : null,
         };
@@ -51,7 +50,7 @@ const MutationType = new GraphQLObjectType({
       },
       resolve: async (_, { url }, { db: { Links }, user }) => {
         if (!user) {
-          throw new Error('You must be logged in to vote');
+          throw new Error('You must be logged in to submit links');
         }
 
         let linkTitle;
@@ -73,8 +72,8 @@ const MutationType = new GraphQLObjectType({
         await getTitle(url);
 
         const link = {
-          author: user._id,
-          created_at: Date.now().toString(),
+          author: ObjectId(user._id),
+          created_at: dayjs(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
           score: 0,
           comments: [],
           description: linkTitle,
@@ -86,12 +85,35 @@ const MutationType = new GraphQLObjectType({
         return Object.assign({ _id: response.insertedIds[0] }, link);
       },
     },
+    destroyLink: {
+      type: LinkType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve: async (_, { id }, { db: { Links }, user }) => {
+        if (!user) {
+          throw new Error('You must be logged in to remove a link');
+        }
+
+        const link = await Links.findOne(ObjectId(id));
+
+        if (!link) {
+          throw new Error('Link does not exist');
+        }
+
+        const response = await Links.deleteOne({ _id: ObjectId(id) });
+
+        if (response.deletedCount === 1) {
+          return link;
+        }
+
+        throw new Error('Link could not be destroyed');
+      },
+    },
     createUser: {
       type: UserType,
       args: {
-        // No empty usernames
         username: { type: new GraphQLNonNull(GraphQLString) },
-        // We can't create a user without the proper credentials
         provider: { type: new GraphQLNonNull(AuthProvider) },
       },
       resolve: async (_, { username, provider }, { db: { Users } }) => {
@@ -101,6 +123,7 @@ const MutationType = new GraphQLObjectType({
           username,
           email: provider.email,
           password: hash,
+          created_at: dayjs(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
         };
         const response = await Users.insert(newUser);
 
@@ -110,7 +133,6 @@ const MutationType = new GraphQLObjectType({
     signInUser: {
       type: SignInPayload,
       args: {
-        // We can't sign in a user w/o credentials
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
       },
@@ -154,7 +176,7 @@ const MutationType = new GraphQLObjectType({
 
         const { score } = link.value;
 
-        pubsub.publish('linkVoted', { 'linkVoted': { _id, score: score + 1 } }); // eslint-disable-line prettier/prettier
+        pubsub.publish(LINK_VOTED, { vote: { _id, score: score + 1 } });
 
         return Links.findOne(ObjectId(_id));
       },
@@ -173,7 +195,7 @@ const MutationType = new GraphQLObjectType({
 
         const { score } = link.value;
 
-        pubsub.publish('linkVoted', { 'linkVoted': { _id, score: score - 1 } }); // eslint-disable-line prettier/prettier
+        pubsub.publish(LINK_VOTED, { vote: { _id, score: score - 1 } }); // eslint-disable-line prettier/prettier
 
         return Links.findOne(ObjectId(_id));
       },

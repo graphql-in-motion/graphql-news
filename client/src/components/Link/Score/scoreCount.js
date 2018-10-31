@@ -7,7 +7,7 @@ const ScoreCount = ({ _id, score }) => (
   <Subscription
     subscription={gql`
       subscription onVote($_id: ID!) {
-        linkVoted(_id: $_id) {
+        vote(_id: $_id) {
           _id
           score
         }
@@ -17,10 +17,10 @@ const ScoreCount = ({ _id, score }) => (
   >
     {({ data }) => {
       if (data) {
-        const { linkVoted } = data;
+        const { vote } = data;
 
-        if (linkVoted && linkVoted._id === _id) {
-          return <span className="score-count">{linkVoted.score}</span>;
+        if (vote && vote._id === _id) {
+          return <span className="score-count">{vote.score}</span>;
         }
       }
       return <span className="score-count">{score}</span>;

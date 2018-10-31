@@ -14,7 +14,7 @@ import schema from './schema';
 import buildDataloaders from './utils/dataloader';
 
 // Global constants
-const MONGO_URL = 'mongodb://localhost:27017/test';
+const MONGO_URL = 'mongodb://localhost:27017/graphql-news-db';
 const PORT = 4000;
 const WS_PORT = 4040;
 
@@ -38,6 +38,17 @@ const start = async () => {
         Comments: response.collection('comments'),
       };
 
+      const buildOptions = req => ({
+        context: {
+          dataloaders: buildDataloaders(db),
+          db,
+          user: req.user,
+        },
+        schema,
+        graphiql: true,
+        subscriptionsEndpoint: `ws://localhost:${WS_PORT}/subscriptions`,
+      });
+
       app.use(bodyParser.json());
       app.use(authMiddleware);
       app.use((req, res, next) => {
@@ -48,20 +59,7 @@ const start = async () => {
         );
         next();
       });
-      app.use(
-        '/graphql',
-        cors(),
-        graphqlHTTP(req => ({
-          context: {
-            dataloaders: buildDataloaders(db),
-            db,
-            user: req.user,
-          },
-          schema,
-          graphiql: true,
-          subscriptionsEndpoint: `ws://localhost:${WS_PORT}/subscriptions`,
-        }))
-      );
+      app.use('/graphql', cors(), graphqlHTTP(buildOptions));
 
       app.listen(PORT, () => {
         console.log(`Running a GraphQL API server at localhost:${PORT}/graphql`); // eslint-disable-line no-console

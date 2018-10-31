@@ -112,26 +112,4 @@ class LoginForm extends Component {
   }
 };
 
-// const CommentsPageWithMutations = () => (
-//   <Mutation mutation={SUBMIT_COMMENT_MUTATION}>
-//     {mutate => {
-//       <AddComment
-//         submit={({ repoFullName, commentContent }) =>
-//           mutate({
-//             variables: { repoFullName, commentContent },
-//             update: (store, { data: { submitComment } }) => {
-//               // Read the data from our cache for this query.
-//               const data = store.readQuery({ query: CommentAppQuery });
-//               // Add our comment from the mutation to the end.
-//               data.comments.push(submitComment);
-//               // Write our data back to the cache.
-//               store.writeQuery({ query: CommentAppQuery, data });
-//             }
-//           })
-//         }
-//       />;
-//     }}
-//   </Mutation>
-// );
-
 export default LoginForm;
