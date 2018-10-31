@@ -1,5 +1,17 @@
 @import "./globals";
 
+.button-group {
+  display: inline-flex;
+
+   button {
+    margin-right: 8px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+   }
+}
+
 %button-shared {
   border: none;
   cursor: pointer;
@@ -96,6 +108,32 @@
   @extend %ui-button-shared;
   background-color: #3275D6;
   letter-spacing: -0.02em;
-  padding: 10px 15px 11px;
+  padding: 10px 18px 11px;
   font-size: 12px;
+}
+
+/**
+ * Modal
+ */
+.modal-action-button {
+  @extend %ui-button-shared;
+  letter-spacing: -0.02em;
+  padding: 10px 18px 11px;
+  font-size: 12px;
+
+  &.destroy {
+    background-color: #E1433A;
+  }
+
+  &.cancel {
+  background-color: $gullGrey;
+  }
+
+  &.submit-button-active {
+    background-color: #3275D6;
+  }
+
+  &.submit-button-disabled {
+    background-color: rgba(50, 117, 214, .4)
+  }
 }

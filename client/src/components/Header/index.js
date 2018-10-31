@@ -8,29 +8,10 @@ import CSSTransition from 'react-transition-group/CSSTransition';
 
 import Tower from '../Svg/tower';
 import { AUTH_TOKEN } from '../../constants';
+import SubmitModal from '../Modal/Submit';
 
 library.add(faSearch);
 
-class SubmitForm extends Component {
-  state = {
-    url: ''
-  }
-
-  render() {
-    const { url } = this.state;
-
-    return (
-      <div className="submit-form-wrapper flex justify-content-center">
-        <div className="submit-form-content">
-          <form className="inline-flex justify-content-between align-items-center">
-            <input type="text" value={url} onChange={e => this.setState({ url: e.target.value })} placeholder="Submit a link" />
-            <span type="instructions">Press <code>enter</code> to submit</span>
-          </form>
-        </div>
-      </div>
-    );
-  }
-}
 
 class Header extends Component {
   static propTypes = {
@@ -93,7 +74,7 @@ class Header extends Component {
           classNames="submit"
           unmountOnExit
         >
-          <SubmitForm />
+          <SubmitModal />
         </CSSTransition>
       </div>
     );

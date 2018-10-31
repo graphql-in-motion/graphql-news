@@ -1,0 +1,133 @@
+@import "./globals";
+
+.modal-content-wrapper {
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 0px 10px rgba(0, 0, 0, .1);
+  left: 50%;
+  min-width: 360px;
+  position: fixed;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+
+  p {
+    line-height: 20px;
+    margin-bottom: 1em;
+
+    strong {
+      font-weight: 700;
+    }
+  }
+}
+
+.modal-header {
+  border-radius: 4px 4px 0 0;
+  background-color: $solitude;
+  padding: 14px 0;
+  margin-bottom: 12px;
+  text-align: left;
+  width: 100%;
+
+  h2 {
+    color: #000;
+    letter-spacing: -0.04;
+    font-weight: 500;
+    padding: 0 12px;
+  }
+}
+
+.modal-content {
+  color: #000000;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  input {
+    margin-bottom: 0;
+  }
+
+  .submit-form-action-area {
+    margin-top: 12px;
+  }
+
+  .validation-error {
+    background-color: rgba(225, 67, 58, .1);
+    border: 1px solid rgb(226, 169, 170);
+    border-radius: 2px;
+    margin: 8px 12px 0;
+
+    p {
+      color: rgb(189, 83, 85);
+      font-size: 12px;
+      font-weight: 400;
+      margin-bottom: 0;
+      padding: 4px 8px;
+    }
+  }
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, .4);
+  height: 100%;
+  width: 100%;
+}
+
+.submit-form-wrapper {
+  font-size: $font-size;
+  width: 100%;
+}
+
+.submit-form-content {
+  input {
+    border: 1px solid $solitude;
+    border-radius: 4px;
+    margin: 0 12px;
+    color: $pickledBluewood;
+    font-size: $font-size;
+    outline: none;
+    width: 400px;
+    padding: 12px 0 12px 12px;
+
+    &::placeholder {
+      color: $gullGrey;
+    }
+  }
+
+  form {
+    width: 100%;
+  }
+}
+
+.submit-form-action-area {
+  margin: 0 12px 12px 12px;
+
+  button {
+    margin-right: 8px;
+  }
+}
+
+.instructions {
+  color: $gullGrey;
+  font-size: 12px;
+  text-align: right;
+  width: 165px;
+
+  code {
+    border: 1px solid $solitude;
+    background-color: #F9FBFB;
+    border-radius: 4px;
+    color: $gullGrey;
+    font-family: 'Menlo', 'Courier New', Courier, monospace;
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+}
