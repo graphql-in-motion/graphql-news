@@ -1,3 +1,5 @@
+@import "./globals";
+
 .screen-wrapper {
   @extend %flex-base-align-center;
   width: 100%;
@@ -7,4 +9,47 @@
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 1em;
+}
+
+.comment-display-wrapper {
+  background-color: white;
+  border-radius: 4px;
+  display: table;
+  overflow: auto;
+  margin-bottom: 4em;
+  width: 828px;
+}
+
+.comment-display-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.4em 2em;
+  border-bottom: 1px solid #f0f0f0;
+  color: #34495E;
+  font-weight: 500;
+  font-size: $font-size;
+}
+
+.comments-list {
+  padding: 1em 2em;
+}
+
+.sort-options {
+  display: inline-flex;
+}
+
+.sort-option {
+  color: $gullGrey;
+  font-weight: 400;
+  margin-right: 16px;
+
+  &.active {
+    font-weight: 500;
+    color: #3275D6;
+  }
+
+  &:last-child {
+    margin-right: 0px;
+  }
 }

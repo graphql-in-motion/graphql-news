@@ -30,7 +30,7 @@ const MutationType = new GraphQLObjectType({
         const { link, content, parent } = data;
 
         const comment = {
-          author: ObjectId(user._id),
+          author: user.id,
           comments: [],
           content,
           created_at: dayjs(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),

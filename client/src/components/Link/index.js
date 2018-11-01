@@ -24,7 +24,7 @@ const Link = ({
           {description}
         </a>
         <a className="link-portal" href={url}>
-          ({url.replace(/(^\w+:|^)\/\//, "")})
+          ({url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]})
         </a>
       </div>
       <Meta

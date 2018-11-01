@@ -45,14 +45,17 @@
   list-style: none;
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  width: 350px;
   font-size: 12px;
 
   li.meta-item {
     display: flex;
     align-items: center;
     border: none;
+    margin-right: 8px;
+
+    &:last-child {
+      margin-right: 0;
+    }
 
     .fa-icon {
       margin-right: 4px;
@@ -102,6 +105,6 @@
   display: table;
   overflow: auto;
   margin-top: 7em;
-  margin-bottom: 4em;
+  margin-bottom: 32px;
   padding: 0.5em 0;
 }
