@@ -21,10 +21,12 @@ const Link = ({
     >
       <div className="link-title-wrapper">
         <a className="link-title" href={url}>
-          {description}
+          {description.length > 60
+            ? `${description.substring(0, 60)}...`
+            : description}
         </a>
         <a className="link-portal" href={url}>
-          ({url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]})
+          ({url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split("/")[0]})
         </a>
       </div>
       <Meta

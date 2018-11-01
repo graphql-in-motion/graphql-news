@@ -1,13 +1,21 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Mutation } from "react-apollo";
+import gql from "graphql-tag";
+import client from "../../../client";
 
-import { AUTH_TOKEN } from '../../../constants';
+import { AUTH_TOKEN } from "../../../constants";
 
 const SIGNUP_MUTATION = gql`
-  mutation SignupMutation($username: String!, $email: String!, $password: String!) {
-    createUser(username: $username, provider: { email: $email, password: $password }) {
+  mutation SignupMutation(
+    $username: String!
+    $email: String!
+    $password: String!
+  ) {
+    createUser(
+      username: $username
+      provider: { email: $email, password: $password }
+    ) {
       token
     }
   }
@@ -19,6 +27,15 @@ const LOGIN_MUTATION = gql`
       token
       user {
         _id
+        about
+        comments {
+          _id
+        }
+        created_at
+        links {
+          _id
+        }
+        username
       }
     }
   }
@@ -26,38 +43,44 @@ const LOGIN_MUTATION = gql`
 
 class LoginForm extends Component {
   static propTypes = {
-    history: PropTypes.object.isRequired,
-  }
+    history: PropTypes.object.isRequired
+  };
 
   state = {
     login: true,
-    email: '',
-    password: '',
-    username: '',
+    email: "",
+    password: "",
+    username: ""
   };
 
   _confirmLogin = async data => {
-    const { token } = this.state.login ? data.signInUser : data.createUser;
-    this._saveUserData(token);
+    const { token, user } = this.state.login
+      ? data.signInUser
+      : data.createUser;
+    this._saveUserData(token, user);
     this.props.history.push(`/`);
-  }
+  };
 
-  _saveUserData = token => {
+  _saveUserData = (token, user) => {
     localStorage.setItem(AUTH_TOKEN, token);
-  }
+
+    client.mutate({
+      mutation: gql`
+        mutation StoreUser($user: User!) {
+          storeUser(user: $user) @client
+        }
+      `,
+      variables: { user }
+    });
+  };
 
   render() {
-    const {
-      login,
-      email,
-      password,
-      username,
-    } = this.state;
+    const { login, email, password, username } = this.state;
 
     return (
       <div className="login-form-wrapper">
         <div className="login-form-content">
-          <h4 className="page-title">{login ? 'Login' : 'Sign Up'}</h4>
+          <h4 className="page-title">{login ? "Login" : "Sign Up"}</h4>
           {!login && (
             <input
               className="login-form-field"
@@ -87,21 +110,17 @@ class LoginForm extends Component {
               onClick={() => this.setState({ login: !login })}
             >
               {login
-                ? 'Need to create an account?'
-                : 'Already have an account?'}
+                ? "Need to create an account?"
+                : "Already have an account?"}
             </button>
-            <Mutation mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION} onCompleted={data => this._confirmLogin(data)}>
+            <Mutation
+              mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
+              variables={{ username, email, password }}
+              onCompleted={data => this._confirmLogin(data)}
+            >
               {mutate => (
-                <button
-                  className="login-hero-button"
-                  onClick={() => (
-                    mutate({
-                      variables: { username, email, password },
-                      update: (store, { data: { signInUser: { user }} }) => store.writeData({ data: { user: user.id} })
-                    })
-                  )}
-                >
-                  {login ? 'Login' : 'Sign Up'}
+                <button className="login-hero-button" onClick={mutate}>
+                  {login ? "Login" : "Sign Up"}
                 </button>
               )}
             </Mutation>
@@ -110,6 +129,6 @@ class LoginForm extends Component {
       </div>
     );
   }
-};
+}
 
 export default LoginForm;

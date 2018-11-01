@@ -5,6 +5,9 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import CSSTransition from "react-transition-group/CSSTransition";
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import client from '../../client';
 
 import Tower from "../Svg/tower";
 import { AUTH_TOKEN } from "../../constants";
@@ -18,6 +21,7 @@ class Header extends Component {
 
     this.state = {
       submit: false,
+      user: null,
     };
 
     this.dismissModal = this.dismissModal.bind(this);
@@ -27,16 +31,35 @@ class Header extends Component {
     history: PropTypes.object
   };
 
+  componentWillMount() {
+    this.getUserData();
+  }
+
   dismissModal() {
     this.setState({
       submit: false,
     });
   }
 
+  async getUserData() {
+    const { data: { user } } = await client.query({
+      query: gql`
+        query GetUser {
+          user {
+            username
+          }
+        }
+      `,
+    });
+
+    this.setState({ user })
+  }
+
   render() {
     const authToken = localStorage.getItem(AUTH_TOKEN);
     const path = window.location.pathname;
-    const { submit } = this.state;
+    const { submit, user } = this.state;
+    console.log(this.state);
 
     return (
       <div className="header-wrapper">
@@ -92,16 +115,19 @@ class Header extends Component {
               </ul>
             </div>
             <div className="login-context-wrapper inline-flex align-items-center">
-              {authToken ? (
-                <button
-                  className="logout-button"
-                  onClick={() => {
-                    localStorage.removeItem(AUTH_TOKEN);
-                    this.props.history.push(`/`);
-                  }}
-                >
-                  Logout
-                </button>
+              {authToken && user ? (
+                <div>
+                  <p>Hi, {user.username}</p>
+                  <button
+                    className="logout-button"
+                    onClick={() => {
+                      localStorage.removeItem(AUTH_TOKEN);
+                      this.props.history.push(`/`);
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
               ) : (
                 <Link to="/login" className="ml1 no-underline black">
                   <button className="login-button">Login</button>

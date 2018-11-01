@@ -69,12 +69,12 @@ export default class Meta extends Component {
           <li className="meta-item">
             <Link to={`/link/${_id}`}>
               <FontAwesomeIcon className="fa-icon" icon="comment" />
-              <span>{commentsLength}</span>
+              <span>{commentsLength} {commentsLength !== 1 ? 'comments' : 'comment'}</span>
             </Link>
           </li>
           <li className="meta-item">
             <FontAwesomeIcon className="fa-icon" icon="bookmark" />
-            <span>Bookmark</span>
+            <span>Save</span>
           </li>
           <li className="meta-item">
             <button

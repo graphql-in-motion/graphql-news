@@ -96,9 +96,9 @@ const QueryType = new GraphQLObjectType({
       type: UserType,
       args: {
         // We must know a user's ID in order to query for him/her
-        _id: { type: new GraphQLNonNull(GraphQLID) },
+        id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve: async (_, { _id }, { db: { Users } }) => await Users.findOne(ObjectId(_id)),
+      resolve: async (_, { id }, { db: { Users } }) => await Users.findOne(ObjectId(id)),
     },
     allComments: {
       type: new GraphQLList(CommentType),

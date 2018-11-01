@@ -32,7 +32,7 @@
     color: inherit;
 
     &:hover {
-      color: $royalFuchsia;
+      color: #3275D6;
     }
   }
 
@@ -46,6 +46,7 @@
   display: inline-flex;
   align-items: center;
   font-size: 12px;
+  font-weight: 500;
 
   li.meta-item {
     display: flex;
@@ -104,7 +105,8 @@
   border-radius: 4px;
   display: table;
   overflow: auto;
-  margin-top: 7em;
+  margin-top: 32px;
   margin-bottom: 32px;
   padding: 0.5em 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .05);
 }

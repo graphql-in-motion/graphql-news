@@ -55,8 +55,6 @@ const LinkScreen = ({ history }) => {
           url
         } = data.link;
 
-        console.log(comments);
-
         return (
           <div className="screen-wrapper flex-direction-column">
             <Header history={history} />
