@@ -16,8 +16,8 @@
   left: 50%;
   min-width: 360px;
   position: fixed;
-  top: 50%;
-  transform: translate3d(-50%, -50%, 0);
+  top: 10%;
+  transform: translateX(-50%);
 
   p {
     line-height: 20px;
@@ -30,18 +30,21 @@
 }
 
 .modal-header {
+  display: flex;
+  align-items: center;
   border-radius: 4px 4px 0 0;
   background-color: $solitude;
-  padding: 14px 0;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   text-align: left;
   width: 100%;
+  height: 48px;
+  font-size: 14px;
 
   h2 {
     color: #000;
     letter-spacing: -0.04;
+    margin-left: 16px;
     font-weight: 500;
-    padding: 0 12px;
   }
 }
 
@@ -51,19 +54,19 @@
   display: flex;
   flex-direction: column;
 
-  input {
-    margin-bottom: 0;
+  .submit-form-action-area {
+    margin-top: 16px;
   }
 
-  .submit-form-action-area {
-    margin-top: 12px;
+  .button-group {
+    margin-bottom: 16px;
   }
 
   .validation-error {
     background-color: rgba(225, 67, 58, .1);
     border: 1px solid rgb(226, 169, 170);
     border-radius: 2px;
-    margin: 8px 12px 0;
+    margin: 8px 16px 0;
 
     p {
       color: rgb(189, 83, 85);
@@ -90,12 +93,12 @@
   input {
     border: 1px solid $solitude;
     border-radius: 4px;
-    margin: 0 12px;
+    margin: 0 16px;
     color: $pickledBluewood;
     font-size: $font-size;
     outline: none;
     width: 400px;
-    padding: 12px 0 12px 12px;
+    padding: 8px;
 
     &::placeholder {
       color: $gullGrey;
@@ -108,7 +111,7 @@
 }
 
 .submit-form-action-area {
-  margin: 0 12px 12px 12px;
+  margin: 0 16px 16px 16px;
 
   button {
     margin-right: 8px;
@@ -117,7 +120,7 @@
 
 .instructions {
   color: $gullGrey;
-  font-size: 12px;
+  font-size: 16px;
   text-align: right;
   width: 165px;
 
