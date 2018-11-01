@@ -16,6 +16,7 @@ const Feed = ({ links }) => (
                   description={link.description}
                   commentsLength={link.comments.length}
                   score={link.score}
+                  createdAt={link.created_at}
                 />
               </li>
             ))

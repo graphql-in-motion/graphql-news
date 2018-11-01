@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import DestroyModal from '../../Modal/Destroy';
 
@@ -39,14 +40,19 @@ export default class Meta extends Component {
     const {
       _id,
       author,
-      commentsLength
+      commentsLength,
+      createdAt
     } = this.props;
 
     return (
       <div className="meta-wrapper">
         {this.state.showModal ? <DestroyModal id={_id} dismissModal={this.dismissModal} /> : null}
         <span>
-          by <a href="javascript:void(0);">{author}</a> 3 hours ago
+          by <Link to={`/user/${author}`}>{author}</Link>
+        </span>
+        <span style={{ margin: '0 0.25em' }}>|</span>
+        <span>
+          {moment(createdAt, '{YYYY} MM-DDTHH:mm:ss SSS [Z] A').fromNow()}
         </span>
         <span style={{ margin: '0 0.25em' }}>|</span>
         <span>
