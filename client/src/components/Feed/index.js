@@ -11,7 +11,7 @@ const Feed = ({ links }) => (
               <li key={i}>
                 <Link
                   _id={link._id}
-                  author={link.author ? link.author : 'anonymous'}
+                  author={link.author.username}
                   url={link.url}
                   description={link.description}
                   commentsLength={link.comments.length}

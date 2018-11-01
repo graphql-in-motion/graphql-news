@@ -1,25 +1,36 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import CSSTransition from 'react-transition-group/CSSTransition';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import CSSTransition from "react-transition-group/CSSTransition";
 
-import Tower from '../Svg/tower';
-import { AUTH_TOKEN } from '../../constants';
-import SubmitModal from '../Modal/Submit';
+import Tower from "../Svg/tower";
+import { AUTH_TOKEN } from "../../constants";
+import SubmitModal from "../Modal/Submit";
 
 library.add(faSearch);
 
-
 class Header extends Component {
-  static propTypes = {
-    history: PropTypes.object,
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      submit: false,
+    };
+
+    this.dismissModal = this.dismissModal.bind(this);
   }
 
-  state = {
-    submit: false,
+  static propTypes = {
+    history: PropTypes.object
+  };
+
+  dismissModal() {
+    this.setState({
+      submit: false,
+    });
   }
 
   render() {
@@ -35,12 +46,48 @@ class Header extends Component {
               <Link to="/">
                 <Tower />
               </Link>
-              <ul className="header-nav inline-flex align-items-center" role="navigation">
-                <li><Link to="/top" className={`nav-link ${path === '/top' ? 'active' : null}`}>Top</Link></li>
-                <li><Link to="/recent" className={`nav-link ${path === '/recent' ? 'active' : null}`}>Recent</Link></li>
-                <li><Link to="/comments" className={`nav-link ${path === '/comments' ? 'active' : null}`}>Comments</Link></li>
+              <ul
+                className="header-nav inline-flex align-items-center"
+                role="navigation"
+              >
+                <li>
+                  <Link
+                    to="/top"
+                    className={`nav-link ${path === "/top" ? "active" : null}`}
+                  >
+                    Top
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/recent"
+                    className={`nav-link ${
+                      path === "/recent" ? "active" : null
+                    }`}
+                  >
+                    Recent
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/comments"
+                    className={`nav-link ${
+                      path === "/comments" ? "active" : null
+                    }`}
+                  >
+                    Comments
+                  </Link>
+                </li>
                 {authToken && (
-                  <li><span onClick={() => this.setState({ submit: !this.state.submit })}>Submit</span></li>
+                  <li>
+                    <span
+                      onClick={() =>
+                        this.setState({ submit: !this.state.submit })
+                      }
+                    >
+                      Submit
+                    </span>
+                  </li>
                 )}
               </ul>
             </div>
@@ -49,8 +96,8 @@ class Header extends Component {
                 <button
                   className="logout-button"
                   onClick={() => {
-                    localStorage.removeItem(AUTH_TOKEN)
-                    this.props.history.push(`/`)
+                    localStorage.removeItem(AUTH_TOKEN);
+                    this.props.history.push(`/`);
                   }}
                 >
                   Logout
@@ -63,7 +110,12 @@ class Header extends Component {
 
               <div className="search-wrapper">
                 <FontAwesomeIcon className="search-icon" icon="search" />
-                <input type="text" className="search-text" value="" placeholder="Search" />
+                <input
+                  type="text"
+                  className="search-text"
+                  value=""
+                  placeholder="Search"
+                />
               </div>
             </div>
           </nav>
@@ -74,7 +126,7 @@ class Header extends Component {
           classNames="submit"
           unmountOnExit
         >
-          <SubmitModal />
+          <SubmitModal dismissModal={this.dismissModal} />
         </CSSTransition>
       </div>
     );

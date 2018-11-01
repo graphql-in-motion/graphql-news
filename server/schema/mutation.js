@@ -72,7 +72,7 @@ const MutationType = new GraphQLObjectType({
         await getTitle(url);
 
         const link = {
-          author: ObjectId(user._id),
+          author: user.id,
           created_at: dayjs(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
           score: 0,
           comments: [],

@@ -25,12 +25,17 @@ export default graphql(gql`
   query AllLinksForHomepage {
     allLinks(first: 10, skip: 0) {
       _id
-      url
-      description
-      score
+      author {
+        _id
+        username
+      }
+      created_at
       comments {
         _id
       }
+      description
+      score
+      url
     }
   }
 `)(RecentLinks);
