@@ -2,10 +2,15 @@ import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import moment from 'moment';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShare, faComment, faFlag } from "@fortawesome/free-solid-svg-icons";
 
 import Header from "../components/Header";
 import Link from "../components/Link";
 import CommentForm from "../components/Forms/Comment";
+
+library.add(faComment, faShare, faFlag);
 
 const GET_LINK = gql`
   query GetLinkByID($link: ID!) {
@@ -87,7 +92,14 @@ const LinkScreen = ({ history }) => {
                         <span>by <span className="username">{comment.author ? comment.author.username : 'anonymous'}</span></span>
                         <span className="comment-timestamp">{moment(comment.created_at, "{YYYY} MM-DDTHH:mm:ss SSS [Z] A").fromNow()}</span>
                       </div>
-                      <p>{comment.content}</p>
+                      <p className="comment-content">{comment.content}</p>
+                      <div className="comment-action-area">
+                        <ul className="comment-actions">
+                          <li><FontAwesomeIcon className="fa-icon" icon="comment" />Reply</li>
+                          <li><FontAwesomeIcon className="fa-icon" icon="share" />Share</li>
+                          <li><FontAwesomeIcon className="fa-icon" icon="flag" />Report</li>
+                        </ul>
+                      </div>
                     </li>
                   )
                 })}
