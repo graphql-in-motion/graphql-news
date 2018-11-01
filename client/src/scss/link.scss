@@ -35,6 +35,33 @@
       color: $royalFuchsia;
     }
   }
+
+  .username {
+    font-weight: 700;
+  }
+}
+
+.meta-list {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 350px;
+  font-size: 12px;
+
+  li.meta-item {
+    display: flex;
+    align-items: center;
+    border: none;
+
+    .fa-icon {
+      margin-right: 4px;
+    }
+  }
+
+  a {
+    text-decoration: none;
+  }
 }
 
 /*
@@ -44,13 +71,16 @@
   @extend %flex-base-align-center;
   margin: 0 2em 0 0;
   padding-top: 0;
-  padding-bottom: 7px;
   min-width: 800px;
 }
 
-.link-title-wrapper {
+.link-content-wrapper {
   display: inline-flex;
   flex-direction: column;
+
+  & .link-title-wrapper {
+    margin-bottom: 4px;
+  }
 }
 
 .link-title {

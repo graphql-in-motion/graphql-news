@@ -16,10 +16,10 @@ const Link = ({
   <div className="link-wrapper">
     <ScoreHOC _id={_id} score={score} />
     <div
-      className="link-title-wrapper"
+      className="link-content-wrapper"
       style={{ display: "inline-flex", flexDirection: "column" }}
     >
-      <div>
+      <div className="link-title-wrapper">
         <a className="link-title" href={url}>
           {description}
         </a>

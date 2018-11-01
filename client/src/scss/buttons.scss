@@ -101,6 +101,20 @@
 }
 
 /**
+ * Link
+ */
+.admin-delete-button {
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  outline: none;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+/**
  * Comment Form
  */
 .comment-button {
