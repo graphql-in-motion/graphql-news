@@ -86,10 +86,11 @@
  */
  .login-hero-button {
   @extend %ui-button-shared;
-  background-color: $royalFuchsia;
+  background-color: #3275D6;
   padding: 10px 18px 11px;
   font-size: 14px;
   width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
 }
 
 .pointer-button {
@@ -131,6 +132,7 @@
   letter-spacing: -0.02em;
   padding: 10px 18px 11px;
   font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
 }
 
 /**

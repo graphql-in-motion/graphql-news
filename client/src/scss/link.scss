@@ -106,7 +106,8 @@
   display: table;
   overflow: auto;
   margin-top: 32px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   padding: 0.5em 0;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, .05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .025);
+  border: 1px solid #DFE0E5;
 }

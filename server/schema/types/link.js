@@ -11,7 +11,7 @@ import { ObjectId } from 'mongodb';
 import UserType from './user';
 import CommentType from './comment';
 
-export const LinkType = new GraphQLObjectType({
+const LinkType = new GraphQLObjectType({
   name: 'Link',
   fields: () => ({
     _id: { type: new GraphQLNonNull(GraphQLID) },

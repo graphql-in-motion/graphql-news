@@ -85,6 +85,19 @@ const MutationType = new GraphQLObjectType({
         return Object.assign({ _id: response.insertedIds[0] }, link);
       },
     },
+    saveLink: {
+      type: LinkType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve: async (_, { id }, { db: { User }, user }) => {
+        if (!user) {
+          throw new Error('You must be logged in to save links');
+        }
+
+        const currentUser = Users.findOne(user.id);
+      },
+    },
     destroyLink: {
       type: LinkType,
       args: {

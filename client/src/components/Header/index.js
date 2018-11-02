@@ -3,14 +3,15 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import CSSTransition from "react-transition-group/CSSTransition";
-import gql from 'graphql-tag';
-import { client } from '../../root';
+import gql from "graphql-tag";
+import { client } from "../../root";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 import Tower from "../Svg/tower";
 import { AUTH_TOKEN } from "../../constants";
 import SubmitModal from "../Modal/Submit";
+import FilterBar from '../FilterBar';
 
 library.add(faSearch);
 
@@ -21,7 +22,7 @@ class Header extends Component {
     this.state = {
       submit: false,
       user: null,
-      token: localStorage.getItem(AUTH_TOKEN),
+      token: localStorage.getItem(AUTH_TOKEN)
     };
 
     this.dismissModal = this.dismissModal.bind(this);
@@ -37,7 +38,7 @@ class Header extends Component {
 
   dismissModal() {
     this.setState({
-      submit: false,
+      submit: false
     });
   }
 
@@ -54,7 +55,7 @@ class Header extends Component {
               }
             }
           }
-        `,
+        `
       });
 
       this.setState({ user });
@@ -77,34 +78,6 @@ class Header extends Component {
                 className="header-nav inline-flex align-items-center"
                 role="navigation"
               >
-                <li>
-                  <Link
-                    to="/top"
-                    className={`nav-link ${path === "/top" ? "active" : null}`}
-                  >
-                    Top
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/recent"
-                    className={`nav-link ${
-                      path === "/recent" ? "active" : null
-                    }`}
-                  >
-                    Recent
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/comments"
-                    className={`nav-link ${
-                      path === "/comments" ? "active" : null
-                    }`}
-                  >
-                    Comments
-                  </Link>
-                </li>
                 {token && (
                   <li>
                     <span
@@ -151,13 +124,17 @@ class Header extends Component {
             </div>
           </nav>
         </header>
+        <FilterBar />
         <CSSTransition
           in={submit}
           timeout={300}
           classNames="submit"
           unmountOnExit
         >
-          <SubmitModal dismissModal={this.dismissModal} history={this.props.history} />
+          <SubmitModal
+            dismissModal={this.dismissModal}
+            history={this.props.history}
+          />
         </CSSTransition>
       </div>
     );

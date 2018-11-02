@@ -19,6 +19,7 @@ const UserType = new GraphQLObjectType({
       resolve: async ({ _id }, data, { db: { Links } }) =>
         await Links.find({ author: _id.toString() }).toArray(),
     },
+    saved: { type: new GraphQLList(GraphQLID) },
     username: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
