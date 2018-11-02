@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import CSSTransition from "react-transition-group/CSSTransition";
 import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
-import client from '../../client';
+import { client } from '../../root';
 
 import Tower from "../Svg/tower";
 import { AUTH_TOKEN } from "../../constants";

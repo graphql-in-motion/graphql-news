@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 import { split } from "apollo-link";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
@@ -7,10 +8,27 @@ import { withClientState } from "apollo-link-state";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { getMainDefinition } from "apollo-utilities";
 import { setContext } from "apollo-link-context";
-import { persistCache } from 'apollo-cache-persist';
-// Relative imports
+import { CachePersistor } from 'apollo-cache-persist';
+import { ApolloProvider } from "react-apollo";
+import { BrowserRouter } from "react-router-dom";
+
 import { AUTH_TOKEN } from "./constants";
 import { initialState, resolvers } from './withData';
+import App from './App';
+
+const cache = new InMemoryCache();
+
+const stateLink = withClientState({
+  cache,
+  defaults: initialState,
+  resolvers: resolvers,
+});
+
+const persistor = new CachePersistor({
+  cache,
+  storage: window.localStorage,
+  debug: true,
+});
 
 // WebSocket endpoint (used for subscriptions)
 const wsLink = new WebSocketLink({
@@ -49,25 +67,34 @@ const authLink = setContext((_, { headers }) => {
 
 const networkLink = authLink.concat(protocolLink);
 
-const cache = new InMemoryCache();
-
-persistCache({
-  cache,
-  storage: window.localStorage,
-});
-
-const stateLink = withClientState({
-  cache,
-  defaults: initialState,
-  resolvers: resolvers,
-});
-
 const link = new ApolloLink.from([stateLink, networkLink]);
 
 // The Apollo client
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link,
   cache
 });
 
-export default client;
+export default class Root extends Component {
+  state = {
+    restored: false,
+  }
+
+  componentDidMount() {
+    persistor.restore().then(() => this.setState({ restored: true }))
+  }
+
+  render() {
+    if (!this.state.restored) {
+      return <div>Loading...</div>
+    }
+
+    return (
+      <BrowserRouter>
+        <ApolloProvider client={client} className="apollo-provider">
+          <App />
+        </ApolloProvider>
+      </BrowserRouter>
+    );
+  }
+}
