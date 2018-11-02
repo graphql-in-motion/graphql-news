@@ -20,8 +20,8 @@ export const LinkType = new GraphQLObjectType({
       args: {
         author: { type: GraphQLID },
       },
-      resolve: async (_, data, { db: { Users } }) =>
-        await Users.findOne({ _id: ObjectId(_.author) }),
+      resolve: async ({ author }, data, { db: { Users } }) =>
+        await Users.findOne({ _id: ObjectId(author) }),
     },
     comments: {
       type: new GraphQLList(CommentType),

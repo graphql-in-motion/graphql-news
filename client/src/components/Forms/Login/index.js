@@ -16,7 +16,7 @@ const SIGNUP_MUTATION = gql`
       username: $username
       provider: { email: $email, password: $password }
     ) {
-      token
+      _id
     }
   }
 `;

@@ -21,6 +21,7 @@ class Header extends Component {
     this.state = {
       submit: false,
       user: null,
+      token: localStorage.getItem(AUTH_TOKEN),
     };
 
     this.dismissModal = this.dismissModal.bind(this);
@@ -41,24 +42,28 @@ class Header extends Component {
   }
 
   async getUserData() {
-    const { data: { user } } = await client.query({
-      query: gql`
-        query GetUser {
-          user {
-            username
+    if (this.state.token) {
+      const { data: { user } } = await client.query({
+        query: gql`
+          query GetUser {
+            user {
+              _id
+              username
+              links {
+                _id
+              }
+            }
           }
-        }
-      `,
-    });
+        `,
+      });
 
-    this.setState({ user })
+      this.setState({ user });
+    }
   }
 
   render() {
-    const authToken = localStorage.getItem(AUTH_TOKEN);
     const path = window.location.pathname;
-    const { submit, user } = this.state;
-    console.log(this.state);
+    const { submit, user, token } = this.state;
 
     return (
       <div className="header-wrapper">
@@ -100,7 +105,7 @@ class Header extends Component {
                     Comments
                   </Link>
                 </li>
-                {authToken && (
+                {token && (
                   <li>
                     <span
                       onClick={() =>
@@ -114,13 +119,14 @@ class Header extends Component {
               </ul>
             </div>
             <div className="login-context-wrapper inline-flex align-items-center">
-              {authToken && user ? (
+              {token && user ? (
                 <div>
                   <p className="current-user">{user.username}</p>
                   <button
                     className="logout-button"
                     onClick={() => {
                       localStorage.removeItem(AUTH_TOKEN);
+                      client.clearStore();
                       this.props.history.push(`/`);
                     }}
                   >
@@ -151,7 +157,7 @@ class Header extends Component {
           classNames="submit"
           unmountOnExit
         >
-          <SubmitModal dismissModal={this.dismissModal} />
+          <SubmitModal dismissModal={this.dismissModal} history={this.props.history} />
         </CSSTransition>
       </div>
     );

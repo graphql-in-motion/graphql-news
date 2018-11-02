@@ -8,7 +8,6 @@ import Feed from '../components/Feed';
 
 const RecentLinks = (props) => {
   const { data: { allLinks } } = props;
-  console.log(allLinks);
   return (
     <div className="screen-wrapper flex-direction-column">
       <Header history={props.history} />
