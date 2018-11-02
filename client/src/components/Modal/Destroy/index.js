@@ -18,10 +18,13 @@ const DESTROY_LINK_MUTATION = gql`
   }
 `;
 
-const DestroyModal = ({ id, dismissModal }) => (
-  <Modal headerText="Are you absolutely sure?" dismissModal={dismissModal}>
-    <p>
-      This action <strong>cannot</strong> be undone.
+const DestroyModal = ({ id, dismissModal, isActive }) => (
+  <Modal headerText="Are you absolutely sure?" dismissModal={dismissModal} isActive={isActive}>
+    <div className="warning">
+      <p>Unexpected bad things will happen if you don't read this!</p>
+    </div>
+    <p className="modal-text">
+      The link, its score, and its comments will be removed. This action <strong>cannot</strong> be undone.
     </p>
     <div className="button-group">
       <button className="modal-action-button cancel" onClick={dismissModal}>
@@ -34,7 +37,7 @@ const DestroyModal = ({ id, dismissModal }) => (
       >
         {mutate => (
           <button className="modal-action-button destroy" onClick={mutate}>
-            <FontAwesomeIcon className="button-icon" icon="trash" />Delete
+            <FontAwesomeIcon className="fa-icon" icon="trash" />Delete
           </button>
         )}
       </Mutation>
@@ -44,7 +47,8 @@ const DestroyModal = ({ id, dismissModal }) => (
 
 DestroyModal.propTypes = {
   id: PropTypes.string.isRequired,
-  dismissModal: PropTypes.func.isRequired
+  dismissModal: PropTypes.func.isRequired,
+  isActive: PropTypes.bool,
 };
 
 export default DestroyModal;
