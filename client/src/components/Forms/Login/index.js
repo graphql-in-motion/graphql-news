@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
@@ -78,53 +78,73 @@ class LoginForm extends Component {
     const { login, email, password, username } = this.state;
 
     return (
-      <div className="login-form-wrapper">
-        <div className="login-form-content">
-          <h4 className="page-title">{login ? "Login" : "Sign Up"}</h4>
-          {!login && (
+      <div>
+        <div className="login-form-wrapper">
+          <div className="login-form-content">
+            {!login && (
+              <Fragment>
+                <label for="username">Username</label>
+                <input
+                  className="login-form-field"
+                  value={username}
+                  name="username"
+                  onChange={e => this.setState({ username: e.target.value })}
+                  type="text"
+                />
+              </Fragment>
+            )}
+            <label for="email">{login ? 'Username or email address' : 'Email address'}</label>
             <input
               className="login-form-field"
-              value={username}
-              onChange={e => this.setState({ username: e.target.value })}
+              value={email}
+              name="email"
+              onChange={e => this.setState({ email: e.target.value })}
               type="text"
-              placeholder="Username"
             />
-          )}
-          <input
-            className="login-form-field"
-            value={email}
-            onChange={e => this.setState({ email: e.target.value })}
-            type="text"
-            placeholder="Email Address"
-          />
-          <input
-            className="login-form-field"
-            value={password}
-            onChange={e => this.setState({ password: e.target.value })}
-            type="password"
-            placeholder="Password"
-          />
-          <div className="flex login-form-button-group">
-            <button
-              className="pointer-button"
+            <label for="password">Password</label>
+            <input
+              className="login-form-field"
+              name="password"
+              value={password}
+              onChange={e => this.setState({ password: e.target.value })}
+              type="password"
+            />
+            <div className="flex login-form-button-group">
+              <Mutation
+                mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
+                variables={{ username, email, password }}
+                onCompleted={data => this._confirmLogin(data)}
+              >
+                {mutate => (
+                  <button className="login-hero-button" onClick={mutate}>
+                    {login ? "Sign in" : "Create an account"}
+                  </button>
+                )}
+              </Mutation>
+            </div>
+
+          </div>
+        </div>
+        <div className="callout-wrapper">
+          {login ? (
+            <span>
+              New to GraphQL News?{" "}
+              <span
+                className="sign-up-cta"
+                onClick={() => this.setState({ login: !login })}
+              >
+                Create an account
+              </span>
+              .
+            </span>
+          ) : (
+            <span
+              className="sign-in-cta"
               onClick={() => this.setState({ login: !login })}
             >
-              {login
-                ? "Need to create an account?"
-                : "Already have an account?"}
-            </button>
-            <Mutation
-              mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
-              variables={{ username, email, password }}
-              onCompleted={data => this._confirmLogin(data)}
-            >
-              {mutate => (
-                <button className="login-hero-button" onClick={mutate}>
-                  {login ? "Login" : "Sign Up"}
-                </button>
-              )}
-            </Mutation>
-          </div>
+              Already have an account?
+            </span>
+          )}
         </div>
       </div>
     );
