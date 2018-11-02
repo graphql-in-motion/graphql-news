@@ -70,39 +70,41 @@ const LinkScreen = ({ history }) => {
               />
               <CommentForm id={_id} />
             </div>
-            <div className="comment-display-wrapper">
-              <div className="comment-display-header">
-                <h2>{comments.length} Comments</h2>
-                <div className="sort-trigger-wrapper">
-                  <ul className="sort-options">
-                    <li className="sort-option active">Best</li>
-                    <li className="sort-option">Worst</li>
-                    <li className="sort-option">Newest</li>
-                    <li className="sort-option">Oldest</li>
-                  </ul>
+            {comments.length > 0 && (
+              <div className="comment-display-wrapper">
+                <div className="comment-display-header">
+                  <h2>{comments.length} Comments</h2>
+                  <div className="sort-trigger-wrapper">
+                    <ul className="sort-options">
+                      <li className="sort-option active">Best</li>
+                      <li className="sort-option">Worst</li>
+                      <li className="sort-option">Newest</li>
+                      <li className="sort-option">Oldest</li>
+                    </ul>
+                  </div>
                 </div>
+                <ul className="comments-list">
+                  {comments.map(comment => {
+                    return (
+                      <li className="comment">
+                        <div className="comment-meta">
+                          <span>by <span className="username">{comment.author ? comment.author.username : 'anonymous'}</span></span>
+                          <span className="comment-timestamp">{moment(comment.created_at, "{YYYY} MM-DDTHH:mm:ss SSS [Z] A").fromNow()}</span>
+                        </div>
+                        <p className="comment-content">{comment.content}</p>
+                        <div className="comment-action-area">
+                          <ul className="comment-actions">
+                            <li><FontAwesomeIcon className="fa-icon" icon="comment" />Reply</li>
+                            <li><FontAwesomeIcon className="fa-icon" icon="share" />Share</li>
+                            <li><FontAwesomeIcon className="fa-icon" icon="flag" />Report</li>
+                          </ul>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ul>
               </div>
-              <ul className="comments-list">
-                {comments.map(comment => {
-                  return (
-                    <li className="comment">
-                      <div className="comment-meta">
-                        <span>by <span className="username">{comment.author ? comment.author.username : 'anonymous'}</span></span>
-                        <span className="comment-timestamp">{moment(comment.created_at, "{YYYY} MM-DDTHH:mm:ss SSS [Z] A").fromNow()}</span>
-                      </div>
-                      <p className="comment-content">{comment.content}</p>
-                      <div className="comment-action-area">
-                        <ul className="comment-actions">
-                          <li><FontAwesomeIcon className="fa-icon" icon="comment" />Reply</li>
-                          <li><FontAwesomeIcon className="fa-icon" icon="share" />Share</li>
-                          <li><FontAwesomeIcon className="fa-icon" icon="flag" />Report</li>
-                        </ul>
-                      </div>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
+            )}
           </div>
         );
       }}

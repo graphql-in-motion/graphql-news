@@ -116,7 +116,7 @@ class Header extends Component {
             <div className="login-context-wrapper inline-flex align-items-center">
               {authToken && user ? (
                 <div>
-                  <p>Hi, {user.username}</p>
+                  <p className="current-user">{user.username}</p>
                   <button
                     className="logout-button"
                     onClick={() => {
