@@ -88,7 +88,10 @@
   align-items: center;
   padding: 8px 24px;
   background-color: #ffffff;
-  border-bottom: 1px solid #DFE0E5;
+}
+
+.popup-wrapper {
+  position: relative;
 }
 
 .sort-label {
@@ -126,17 +129,28 @@
 .filter-menu {
   background-color: #ffffff;
   border-radius: 4px;
-  border: 1px solid #DFE0E5;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .05);
   display: flex;
   flex-direction: column;
-  left: 77px;
   position: absolute;
-  top: 112px;
+  left: -90px;
+  top: 32px;
+  z-index: 1000;
+
+  .menu-arrow {
+    display: flex;
+    position: absolute;
+    fill: #ffffff;
+    left: 52px;
+    top: -6px;
+  }
+
 
   button {
+    background-color: transparent;
     align-items: center;
     border: none;
+    border-bottom: 1px solid #f0f0f0;
     color: $gullGrey;
     cursor: pointer;
     display: inline-flex;
@@ -147,27 +161,20 @@
     padding: 8px 16px;
 
     &:first-child {
-      border-bottom: 1px solid #F0F0F0;
       border-radius: 4px 4px 0 0;
     }
 
     &:last-child {
       border-bottom: none;
       border-radius: 0 0 4px 4px;
-      border-top: 1px solid #F0F0F0;
     }
 
     &:hover {
-      background-color: #fafafa;
       color: $pickledBluewood;
     }
 
     &.active {
       color: #3275D6;
-
-      &:hover {
-        background-color: rgba(50, 118, 214, 0.1);
-      }
     }
 
     .fa-icon {
