@@ -1,0 +1,69 @@
+input AuthProvider {
+  email: String!
+  password: String!
+}
+
+type Comment {
+  _id: ID!
+  link: Link
+  parent: Comment
+  comments: [Comment]
+  author(author: ID): User
+  content: String!
+  created_at: String!
+}
+
+type Link {
+  _id: ID!
+  author(author: ID): User
+  comments: [Comment]
+  created_at: String!
+  description: String
+  score: Int
+  url: String!
+}
+
+input LinkFilter {
+  top: Int
+  urlContains: String
+}
+
+type User {
+  _id: ID!
+  about: String
+  comments: [Comment]
+  created_at: String!
+  links: [Link]
+  saved: [ID]
+  username: String!
+}
+
+type SignInPayload {
+  token: String!
+  user: User!
+}
+
+type Query {
+  allLinks(first: Int, skip: Int): [Link]
+  link(_id: ID!): Link
+  filterLinks(filter: LinkFilter): [Link]
+  allUsers: [User]
+  user(id: ID!): User
+  allComments: [Comment]
+}
+
+type Mutation {
+  createComment(link: ID!, parent: ID, content: String!): Comment
+  createLink(url: String!): Link
+  saveLink(id: ID!): Link
+  destroyLink(id: ID!): Link
+  createUser(username: String!, provider: AuthProvider!): User
+  signInUser(email: String!, password: String!): SignInPayload
+  upvoteLink(_id: ID!): Link
+  downvoteLink(_id: ID!): Link
+}
+
+type Subscription {
+  vote(_id: ID!): Link
+}
+
