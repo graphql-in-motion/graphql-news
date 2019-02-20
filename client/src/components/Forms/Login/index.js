@@ -83,7 +83,7 @@ class LoginForm extends Component {
           <div className="login-form-content">
             {!login && (
               <Fragment>
-                <label for="username">Username</label>
+                <label>Username</label>
                 <input
                   className="login-form-field"
                   value={username}
@@ -93,7 +93,7 @@ class LoginForm extends Component {
                 />
               </Fragment>
             )}
-            <label for="email">{login ? 'Username or email address' : 'Email address'}</label>
+            <label>{login ? 'Username or email address' : 'Email address'}</label>
             <input
               className="login-form-field"
               value={email}
@@ -101,7 +101,7 @@ class LoginForm extends Component {
               onChange={e => this.setState({ email: e.target.value })}
               type="text"
             />
-            <label for="password">Password</label>
+            <label>Password</label>
             <input
               className="login-form-field"
               name="password"

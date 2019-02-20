@@ -55,41 +55,36 @@ export default class SubmitForm extends Component {
     const { url, isValid } = this.state;
 
     return (
-      <div className="submit-form-wrapper flex justify-content-center">
-        <div className="submit-form-content">
-          <Mutation mutation={SUBMIT_LINK_MUTATION} variables={{ url }}>
-            {mutate => (
-              <form
-                className="justify-content-between align-items-center"
-                onSubmit={mutate}
-              >
+      <div className="submit-form-wrapper">
+        <Mutation mutation={SUBMIT_LINK_MUTATION} variables={{ url }}>
+          {mutate => (
+            <form onSubmit={mutate}>
+              <div  className="submit-form-content">
                 <input
                   type="text"
                   value={url}
                   onChange={e => this.onChange(e)}
                   placeholder="Enter a URL..."
                 />
-                {url.length > 0 && !isValid ? (
-                  <div className="validation-error">
-                    <p>Please enter a valid URL</p>
-                  </div>
-                ) : null}
-                <div className="submit-form-action-area">
-                  <input
-                    type="submit"
-                    className={`modal-action-button submit-button-${
-                      url.length > 0 && isValid ? "active" : "disabled"
-                    }`}
-                    value="Submit"
-                  />
-                  <span className="instructions">
-                    Or, press <code>enter</code> to submit
-                  </span>
+
+                <input
+                  type="submit"
+                  className={`submit-button-${
+                    url.length > 0 && isValid ? "active" : "disabled"
+                  }`}
+                  value="Submit"
+                  disabled={!isValid}
+                />
+              </div>
+
+              {url.length > 0 && !isValid ? (
+                <div className="validation-error">
+                  <p>Please enter a valid URL</p>
                 </div>
-              </form>
-            )}
-          </Mutation>
-        </div>
+              ) : null}
+            </form>
+          )}
+        </Mutation>
       </div>
     );
   }

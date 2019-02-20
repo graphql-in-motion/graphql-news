@@ -18,7 +18,7 @@
   position: fixed;
   top: 10%;
   transform: translateX(-50%);
-  max-width: 448px;
+  // max-width: 500px;
 
   .modal-text {
     line-height: 22px;
@@ -65,7 +65,7 @@
     background-color: rgba(225, 67, 58, .1);
     border: 1px solid rgb(226, 169, 170);
     border-radius: 2px;
-    margin: 8px 16px 0;
+    margin: 8px 12px 12px;
 
     p {
       color: rgb(189, 83, 85);
@@ -89,18 +89,45 @@
 }
 
 .submit-form-content {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  margin: 12px;
+
   input {
-    border: 1px solid $solitude;
     border-radius: 4px;
-    margin: 0 16px;
+    border: 1px solid $solitude;
     color: $pickledBluewood;
     font-size: $font-size;
     outline: none;
-    width: 400px;
-    padding: 8px;
+    height: 48px;
+    padding: 0 12px;
 
     &::placeholder {
       color: $gullGrey;
+    }
+
+    &[type="text"] {
+      height: 46px; // match button height
+      margin: 0 16px 0 0;
+      width: 400px;
+    }
+
+    &[type="submit"] {
+      @extend %ui-button-shared;
+      background-color: #3275D6;
+      letter-spacing: -0.02em;
+      font-size: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+      width: 120px;
+
+      &.submit-button-active {
+        background-color: #3275D6;
+      }
+
+      &.submit-button-disabled {
+        background-color: $gullGrey;
+      }
     }
   }
 
@@ -143,7 +170,7 @@
   border-top: 1px solid #DDDAC2;
   border-bottom: 1px solid #DDDAC2;
   text-align: left;
-  min-width: 400px;
+  width: calc(100% - 48px);
 
   p {
     margin: 0;
