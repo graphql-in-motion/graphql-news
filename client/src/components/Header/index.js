@@ -11,7 +11,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Tower from "../Svg/tower";
 import { AUTH_TOKEN } from "../../constants";
 import SubmitModal from "../Modal/Submit";
-import FilterBar from '../FilterBar';
 
 library.add(faSearch);
 
@@ -124,7 +123,6 @@ class Header extends Component {
             </div>
           </nav>
         </header>
-        <FilterBar />
         <CSSTransition
           in={submit}
           timeout={300}

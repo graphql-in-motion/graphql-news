@@ -74,14 +74,6 @@ const LinkScreen = ({ history }) => {
               <div className="comment-display-wrapper">
                 <div className="comment-display-header">
                   <h2>{comments.length} Comments</h2>
-                  <div className="sort-trigger-wrapper">
-                    <ul className="sort-options">
-                      <li className="sort-option active">Best</li>
-                      <li className="sort-option">Worst</li>
-                      <li className="sort-option">Newest</li>
-                      <li className="sort-option">Oldest</li>
-                    </ul>
-                  </div>
                 </div>
                 <ul className="comments-list">
                   {comments.map(comment => {
@@ -95,8 +87,6 @@ const LinkScreen = ({ history }) => {
                         <div className="comment-action-area">
                           <ul className="comment-actions">
                             <li><FontAwesomeIcon className="fa-icon" icon="comment" />Reply</li>
-                            <li><FontAwesomeIcon className="fa-icon" icon="share" />Share</li>
-                            <li><FontAwesomeIcon className="fa-icon" icon="flag" />Report</li>
                           </ul>
                         </div>
                       </li>

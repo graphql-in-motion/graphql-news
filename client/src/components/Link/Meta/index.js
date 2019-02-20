@@ -99,7 +99,7 @@ export default class Meta extends Component {
           <li className="meta-item">
             <span style={{ marginRight: "2px" }}>by</span>
             <span className="username">
-              <Link to={`/user/${author}`}>{author}</Link>
+              {author}
             </span>
           </li>
           <li className="meta-item">
@@ -116,10 +116,10 @@ export default class Meta extends Component {
               </span>
             </Link>
           </li>
-          <li className="meta-item">
+          {/* <li className="meta-item">
             <FontAwesomeIcon className="fa-icon" icon="bookmark" />
             <span>Save</span>
-          </li>
+          </li> */}
           {isOwnLink && (
             <li className="meta-item">
               <button

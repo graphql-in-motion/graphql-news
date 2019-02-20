@@ -7,6 +7,7 @@ import { createServer } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import expressPlayground from 'graphql-playground-middleware-express';
 import 'dotenv';
 // Schema
 import schema from './schema';
@@ -60,6 +61,7 @@ const start = async () => {
         next();
       });
       app.use('/graphql', cors(), graphqlHTTP(buildOptions));
+      app.get('/playground', expressPlayground({ endpoint: '/graphql' }));
 
       app.listen(PORT, () => {
         console.log(`Running a GraphQL API server at localhost:${PORT}/graphql`); // eslint-disable-line no-console

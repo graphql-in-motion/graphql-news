@@ -1704,10 +1704,6 @@ bcrypt@^3.0.2:
     nan "2.11.1"
     node-pre-gyp "0.11.0"
 
-big-integer@^1.6.36:
-  version "1.6.36"
-  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.36.tgz#78631076265d4ae3555c04f85e7d9d2f3a071a36"
-
 binary-extensions@^1.0.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.11.0.tgz#46aa1751fb6a2f93ee5e689bb1087d4b14c6c205"
@@ -3366,6 +3362,16 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.4:
 graphql-in-motion_express-graphql@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/graphql-in-motion_express-graphql/-/graphql-in-motion_express-graphql-1.0.0.tgz#c789c626696f94ae0905d00a9c6deb1604cfe0e9"
+
+graphql-playground-html@1.6.12:
+  version "1.6.12"
+  resolved "https://registry.yarnpkg.com/graphql-playground-html/-/graphql-playground-html-1.6.12.tgz#8b3b34ab6013e2c877f0ceaae478fafc8ca91b85"
+
+graphql-playground-middleware-express@^1.7.11:
+  version "1.7.11"
+  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-express/-/graphql-playground-middleware-express-1.7.11.tgz#bbffd784a37133bfa7165bdd8f429081dbf4bcf6"
+  dependencies:
+    graphql-playground-html "1.6.12"
 
 graphql-subscriptions@^0.5.6:
   version "0.5.6"
