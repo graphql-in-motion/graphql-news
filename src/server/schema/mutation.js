@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import 'isomorphic-fetch';
 import moment from 'moment';
+import Mercury from "@postlight/mercury-parser";
 
 import LinkType from './types/link';
 import UserType from './types/user';
@@ -56,13 +57,7 @@ const MutationType = new GraphQLObjectType({
         let linkTitle;
 
         const getTitle = async qs =>
-          await fetch(`https://mercury.postlight.com/parser?url=${qs}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'x-api-key': 'cHI79Z6O2dAzC5HhruDfYpbgyhlo3VFVMUe87CKF',
-            },
-          })
-            .then(response => response.json())
+          await Mercury.parse(qs)
             .then(response => {
               const { title } = response;
 
