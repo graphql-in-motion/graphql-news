@@ -60,8 +60,8 @@ const start = async () => {
         );
         next();
       });
-      app.use('/graphql', cors(), graphqlHTTP(buildOptions));
-      app.get('/playground', expressPlayground({ endpoint: '/graphql' }));
+      app.use('/v1', cors(), graphqlHTTP(buildOptions));
+      app.get('/graphql', expressPlayground({ endpoint: '/v1' }));
 
       app.listen(PORT, () => {
         console.log(`Running a GraphQL API server at localhost:${PORT}/graphql`); // eslint-disable-line no-console
