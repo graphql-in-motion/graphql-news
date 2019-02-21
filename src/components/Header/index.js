@@ -90,7 +90,7 @@ class Header extends Component {
                 )}
 
                 <li>
-                  <Link to="/playground">
+                  <Link to="/playground" style={{ textDecoration: 'none' }}>
                     <span className="api-button">
                       API
                     </span>

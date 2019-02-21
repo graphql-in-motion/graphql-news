@@ -2,6 +2,8 @@
 
 .screen-wrapper {
   @extend %flex-base-align-center;
+
+  background-color: #ECEEF1;
   position: absolute;
   top: 0;
   left: 0;

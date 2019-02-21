@@ -3,19 +3,33 @@
 .button-group {
   display: inline-flex;
 
-   button {
+  button {
     margin-right: 8px;
 
     &:last-child {
       margin-right: 0;
     }
-   }
+  }
 }
 
 %button-shared {
   border: none;
   cursor: pointer;
   outline: none;
+}
+
+.api-button {
+  @extend %button-shared;
+
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+  color: $royalFuchsia;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 8px;
+  position: relative;
+  top: -1px;
 }
 
 .downvote-button {
@@ -33,7 +47,7 @@
 .upvote-button {
   @extend %button-shared;
 
-  svg > path {
+  svg>path {
     fill: $gullGrey;
   }
 }
@@ -84,7 +98,7 @@
 /**
  * Login Form
  */
- .login-hero-button {
+.login-hero-button {
   @extend %ui-button-shared;
   background-color: #3275D6;
   padding: 10px 18px 11px;
