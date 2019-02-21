@@ -43,7 +43,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start:server": "babel-node ./src/server",
+    "dev:server": "nodemon --exec babel-node ./src/server"
   },
   "eslintConfig": {
     "extends": "react-app"
