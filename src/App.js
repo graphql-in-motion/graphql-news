@@ -5,6 +5,14 @@ import RecentLinks from './screens/recent';
 import TopLinks from './screens/top';
 import LinkScreen from './screens/link';
 import Login from './screens/login';
+import { Provider } from 'react-redux'
+import { Playground, store } from 'graphql-playground-react';
+
+const PlaygroundContainer = () => (
+  <Provider store={store}>
+    <Playground endpoint="http://localhost:4000/v1"/>
+  </Provider>
+);
 
 const App = ({ client }) => (
   <div className="app-container">
@@ -13,6 +21,9 @@ const App = ({ client }) => (
     <Route exact path="/recent" compoennt={RecentLinks} />
     <Route path="/link/:id" component={LinkScreen} />
     <Route exact path="/login" component={Login} client={client} />
+    <div className="playground-container">
+      <Route exaxt path="/playground" component={PlaygroundContainer} />
+    </div>
   </div>
 );
 

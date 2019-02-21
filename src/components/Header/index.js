@@ -42,7 +42,9 @@ class Header extends Component {
 
   async getUserData() {
     if (this.state.token) {
-      const { data: { user } } = await client.query({
+      const {
+        data: { user }
+      } = await client.query({
         query: gql`
           query GetUser {
             user {
@@ -86,6 +88,14 @@ class Header extends Component {
                     </span>
                   </li>
                 )}
+
+                <li>
+                  <Link to="/playground">
+                    <span className="api-button">
+                      API
+                    </span>
+                  </Link>
+                </li>
               </ul>
             </div>
             <div className="login-context-wrapper inline-flex align-items-center">
@@ -115,16 +125,19 @@ class Header extends Component {
                   type="text"
                   className="search-text"
                   value=""
+                  onChange={() => {}}
                   placeholder="Search"
                 />
               </div>
             </div>
           </nav>
         </header>
-        <SubmitModal
-          dismissModal={this.dismissModal}
-          history={this.props.history}
-        />
+        {submit ? (
+          <SubmitModal
+            dismissModal={this.dismissModal}
+            history={this.props.history}
+          />
+        ) : null}
       </div>
     );
   }
