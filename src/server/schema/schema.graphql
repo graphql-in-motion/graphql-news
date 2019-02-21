@@ -55,7 +55,6 @@ type Query {
 type Mutation {
   createComment(link: ID!, parent: ID, content: String!): Comment
   createLink(url: String!): Link
-  saveLink(id: ID!): Link
   destroyLink(id: ID!): Link
   createUser(username: String!, provider: AuthProvider!): User
   signInUser(email: String!, password: String!): SignInPayload

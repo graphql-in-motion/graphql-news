@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CSSTransition from "react-transition-group/CSSTransition";
 import gql from "graphql-tag";
 import { client } from "../../root";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -122,17 +121,10 @@ class Header extends Component {
             </div>
           </nav>
         </header>
-        <CSSTransition
-          in={submit}
-          timeout={300}
-          classNames="submit"
-          unmountOnExit
-        >
-          <SubmitModal
-            dismissModal={this.dismissModal}
-            history={this.props.history}
-          />
-        </CSSTransition>
+        <SubmitModal
+          dismissModal={this.dismissModal}
+          history={this.props.history}
+        />
       </div>
     );
   }

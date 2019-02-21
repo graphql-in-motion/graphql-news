@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import 'isomorphic-fetch';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 import LinkType from './types/link';
 import UserType from './types/user';
@@ -33,7 +33,7 @@ const MutationType = new GraphQLObjectType({
           author: user.id,
           comments: [],
           content,
-          created_at: dayjs(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
+          created_at: moment(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
           link: ObjectId(link),
           parent: parent ? ObjectId(parent) : null,
         };
@@ -73,7 +73,7 @@ const MutationType = new GraphQLObjectType({
 
         const link = {
           author: user.id,
-          created_at: dayjs(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
+          created_at: moment(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
           score: 0,
           comments: [],
           description: linkTitle,
@@ -83,19 +83,6 @@ const MutationType = new GraphQLObjectType({
         const response = await Links.insert(link);
 
         return Object.assign({ _id: response.insertedIds[0] }, link);
-      },
-    },
-    saveLink: {
-      type: LinkType,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLID) },
-      },
-      resolve: async (_, { id }, { db: { User }, user }) => {
-        if (!user) {
-          throw new Error('You must be logged in to save links');
-        }
-
-        const currentUser = Users.findOne(user.id);
       },
     },
     destroyLink: {
@@ -136,7 +123,7 @@ const MutationType = new GraphQLObjectType({
           username,
           email: provider.email,
           password: hash,
-          created_at: dayjs(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
+          created_at: moment(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
         };
         const response = await Users.insert(newUser);
 
