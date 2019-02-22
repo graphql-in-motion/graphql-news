@@ -21,9 +21,12 @@ class Header extends Component {
       submit: false,
       user: null,
       token: localStorage.getItem(AUTH_TOKEN), // eslint-disable-line no-undef
+      search: '',
     };
 
     this.dismissModal = this.dismissModal.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
   }
 
   static propTypes = {
@@ -60,6 +63,19 @@ class Header extends Component {
 
       this.setState({ user });
     }
+  }
+
+  handleSearchChange(e) {
+    this.setState({ search: e.target.value });
+  }
+
+  handleSearchSubmit(e) {
+    e.preventDefault();
+
+    this.props.history.push({
+      pathname: '/search',
+      search: `?query=${this.state.search}`,
+    });
   }
 
   render() {
@@ -104,16 +120,16 @@ class Header extends Component {
                 </Link>
               )}
 
-              <div className="search-wrapper">
+              <form className="search-wrapper" onSubmit={this.handleSearchSubmit}>
                 <FontAwesomeIcon className="search-icon" icon="search" />
                 <input
                   type="text"
                   className="search-text"
-                  value=""
-                  onChange={() => {}}
+                  value={this.state.search}
+                  onChange={this.handleSearchChange}
                   placeholder="Search"
                 />
-              </div>
+              </form>
             </div>
           </nav>
         </header>
