@@ -1,8 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import RecentLinks from './screens/recent';
-import TopLinks from './screens/top';
+import AllLinks from './screens/all';
 import LinkScreen from './screens/link';
 import Login from './screens/login';
 import { Provider } from 'react-redux'
@@ -16,9 +15,7 @@ const PlaygroundContainer = () => (
 
 const App = ({ client }) => (
   <div className="app-container">
-    <Route exact path="/" component={RecentLinks} />
-    <Route exact path="/top" component={TopLinks} />
-    <Route exact path="/recent" compoennt={RecentLinks} />
+    <Route exact path="/" component={AllLinks} />
     <Route path="/link/:id" component={LinkScreen} />
     <Route exact path="/login" component={Login} client={client} />
     <div className="playground-container">

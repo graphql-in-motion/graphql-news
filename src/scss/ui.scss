@@ -102,3 +102,33 @@
     margin-right: 4px;
   }
 }
+
+.banner {
+  background-color: #08141B;
+  color: #ffffff;
+  display: flex;
+  width: 100%;
+  padding: 8px 0;
+
+  .banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 2em;
+    width: 100%;
+  }
+
+  p {
+    padding: 0;
+  }
+
+  a {
+    color: inherit;
+    font-style: italic;
+
+    &:hover {
+      cursor: pointer;
+      color: #3275D6;
+    }
+  }
+}

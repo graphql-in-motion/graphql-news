@@ -24,11 +24,11 @@ const stateLink = withClientState({
   resolvers: resolvers,
 });
 
-const persistor = new CachePersistor({
-  cache,
-  storage: window.localStorage,
-  debug: true,
-});
+// const persistor = new CachePersistor({
+//   cache,
+//   storage: window.localStorage,
+//   debug: true,
+// });
 
 // WebSocket endpoint (used for subscriptions)
 const wsLink = new WebSocketLink({
@@ -40,7 +40,7 @@ const wsLink = new WebSocketLink({
 
 // HTTP endpoint
 const httpLink = new HttpLink({
-  uri: "http://localhost:4000/graphql"
+  uri: "http://localhost:4000/v1"
 });
 
 // Using the `split()` function, we can send data to each link's
@@ -81,13 +81,15 @@ export default class Root extends Component {
   }
 
   componentDidMount() {
-    persistor.restore().then(() => this.setState({ restored: true }))
+    // persistor.restore().then(() => this.setState({ restored: true }))
+    this.setState({ restored: true });
   }
 
   render() {
     if (!this.state.restored) {
       return <div>Loading...</div>
     }
+    console.log(client);
 
     return (
       <BrowserRouter>

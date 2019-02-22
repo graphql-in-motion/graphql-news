@@ -191,3 +191,40 @@
     color: #3275D6;
   }
 }
+
+.banner-close-button {
+  @extend %ui-text-button-shared;
+  color: #ffffff;
+
+  &:hover {
+    color: #3275D6;
+  }
+}
+
+.pagination-button-container {
+  margin-bottom: 32px;
+}
+
+.pagination-button {
+  @extend %ui-button-shared;
+  border: none;
+  color: #ffffff;
+  font-size: 12px;
+  letter-spacing: -0.02em;
+  margin-left: 0 !important;
+  margin-right: 8px !important;
+  padding: 10px 18px 11px !important;
+  min-width: 120px;
+  background-color: #3275D6;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+  }
+
+  &.disabled {
+    background-color: $gullGrey;
+    color: $solitude;
+  }
+}

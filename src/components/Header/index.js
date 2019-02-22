@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import gql from "graphql-tag";
-import { client } from "../../root";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import gql from 'graphql-tag';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { client } from '../../root';
 
-import Tower from "../Svg/tower";
-import { AUTH_TOKEN } from "../../constants";
-import SubmitModal from "../Modal/Submit";
+import Tower from '../Svg/tower';
+import { AUTH_TOKEN } from '../../constants';
+import SubmitModal from '../Modal/Submit';
 
 library.add(faSearch);
 
@@ -20,30 +20,30 @@ class Header extends Component {
     this.state = {
       submit: false,
       user: null,
-      token: localStorage.getItem(AUTH_TOKEN)
+      token: localStorage.getItem(AUTH_TOKEN), // eslint-disable-line no-undef
     };
 
     this.dismissModal = this.dismissModal.bind(this);
   }
 
   static propTypes = {
-    history: PropTypes.object
+    history: PropTypes.object,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.getUserData();
   }
 
   dismissModal() {
     this.setState({
-      submit: false
+      submit: false,
     });
   }
 
   async getUserData() {
     if (this.state.token) {
       const {
-        data: { user }
+        data: { user },
       } = await client.query({
         query: gql`
           query GetUser {
@@ -55,7 +55,7 @@ class Header extends Component {
               }
             }
           }
-        `
+        `,
       });
 
       this.setState({ user });
@@ -73,29 +73,14 @@ class Header extends Component {
               <Link to="/">
                 <Tower />
               </Link>
-              <ul
-                className="header-nav inline-flex align-items-center"
-                role="navigation"
-              >
+              <ul className="header-nav inline-flex align-items-center" role="navigation">
                 {token && (
                   <li>
-                    <span
-                      onClick={() =>
-                        this.setState({ submit: !this.state.submit })
-                      }
-                    >
+                    <span onClick={() => this.setState({ submit: !this.state.submit })}>
                       Submit
                     </span>
                   </li>
                 )}
-
-                <li>
-                  <Link to="/playground" style={{ textDecoration: 'none' }}>
-                    <span className="api-button">
-                      API
-                    </span>
-                  </Link>
-                </li>
               </ul>
             </div>
             <div className="login-context-wrapper inline-flex align-items-center">
@@ -105,7 +90,7 @@ class Header extends Component {
                   <button
                     className="logout-button"
                     onClick={() => {
-                      localStorage.removeItem(AUTH_TOKEN);
+                      localStorage.removeItem(AUTH_TOKEN); // eslint-disable-line no-undef
                       client.clearStore();
                       this.props.history.push(`/`);
                     }}
@@ -133,10 +118,7 @@ class Header extends Component {
           </nav>
         </header>
         {submit ? (
-          <SubmitModal
-            dismissModal={this.dismissModal}
-            history={this.props.history}
-          />
+          <SubmitModal dismissModal={this.dismissModal} history={this.props.history} />
         ) : null}
       </div>
     );
