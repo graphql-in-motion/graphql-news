@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Link from '../Link';
 
@@ -14,7 +15,7 @@ const Feed = ({ links }) => (
                   author={link.author.username}
                   url={link.url}
                   description={link.description}
-                  commentsLength={link.comments.length}
+                  commentsLength={link.commentsLength}
                   score={link.score}
                   createdAt={link.created_at}
                 />
@@ -25,5 +26,9 @@ const Feed = ({ links }) => (
     </div>
   </div>
 );
+
+Feed.propTypes = {
+  links: PropTypes.array.isRequired,
+};
 
 export default Feed;

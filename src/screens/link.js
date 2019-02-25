@@ -16,6 +16,7 @@ const GET_LINK = gql`
         _id
         username
       }
+      commentsLength
       created_at
       description
       score
@@ -37,6 +38,7 @@ const LinkScreen = ({ history }) => {
           const {
             _id,
             author: { username },
+            commentsLength,
             created_at, // eslint-disable-line camelcase
             description,
             score,
@@ -49,6 +51,7 @@ const LinkScreen = ({ history }) => {
                 <Link
                   _id={_id}
                   author={username}
+                  commentsLength={commentsLength}
                   createdAt={created_at} // eslint-disable-line camelcase
                   description={description}
                   score={score}
@@ -56,7 +59,7 @@ const LinkScreen = ({ history }) => {
                 />
                 <CommentForm id={_id} history={history} linkId={_id} />
               </div>
-              <CommentsContainer linkId={_id} />
+              <CommentsContainer commentsLength={commentsLength} linkId={_id} />
             </React.Fragment>
           );
         }}

@@ -52,7 +52,7 @@ const GET_COMMENTS_FOR_LINK = gql`
   }
 `;
 
-const CommentsContainer = ({ linkId }) => (
+const CommentsContainer = ({ commentsLength, linkId }) => (
   <Query query={GET_COMMENTS_FOR_LINK} variables={{ link: linkId }}>
     {({ loading, error, data }) => {
       if (loading) return 'Loading...';
@@ -64,7 +64,7 @@ const CommentsContainer = ({ linkId }) => (
         return (
           <div className="comment-display-wrapper">
             <div className="comment-display-header">
-              <h2>{commentsForLink.length} Comments</h2>
+              <h2>{commentsLength} Comments</h2>
             </div>
             <ul className="comments-list">
               {commentsForLink.map(comment => (
@@ -92,6 +92,7 @@ const CommentsContainer = ({ linkId }) => (
 );
 
 CommentsContainer.propTypes = {
+  commentsLength: PropTypes.number.isRequired,
   linkId: PropTypes.string.isRequired,
 };
 

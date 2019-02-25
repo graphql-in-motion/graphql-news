@@ -32,6 +32,18 @@ const LinkType = new GraphQLObjectType({
         return comments.filter(i => i.parent === null);
       },
     },
+    commentsLength: {
+      type: new GraphQLNonNull(GraphQLInt),
+      resolve: async ({ _id }, data, { db: { Comments } }) => {
+        const comments = await Comments.find({ link: ObjectId(_id) }).toArray();
+
+        if (comments.length > 0) {
+          return comments.length;
+        }
+
+        return 0;
+      },
+    },
     created_at: { type: new GraphQLNonNull(GraphQLString) },
     description: { type: GraphQLString },
     score: { type: GraphQLInt },

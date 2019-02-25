@@ -16,10 +16,8 @@ const GET_LINKS = gql`
         _id
         username
       }
+      commentsLength
       created_at
-      comments {
-        _id
-      }
       description
       score
       url
@@ -55,18 +53,21 @@ const AllLinks = props => {
             <div>
               <Feed links={allLinks} />
               <div className="pagination-button-container flex justify-content-center">
-                <button
-                  className={`pagination-button ${currentPage > 1 ? '' : 'disabled'}`}
-                  disabled={currentPage <= 1}
-                >
-                  {currentPage > 1 ? <Link to={`/?p=${currentPage - 1}`}>Prev</Link> : 'Prev'}
-                </button>
-                <button
-                  className={`pagination-button ${allLinks.length !== 5 ? 'disabled' : ''}`}
-                  disabled={allLinks.length !== 5}
-                >
-                  {allLinks.length === 5 ? <Link to={`/?p=${currentPage + 1}`}>Next</Link> : 'Next'}
-                </button>
+                {currentPage > 1 ? (
+                  <Link to={`/?p=${currentPage - 1}`}>
+                    <PrevButton disabled={false} />
+                  </Link>
+                ) : (
+                  <PrevButton disabled={true} />
+                )}
+
+                {allLinks.length === 5 ? (
+                  <Link to={`/?p=${currentPage + 1}`}>
+                    <NextButton disabled={false} />
+                  </Link>
+                ) : (
+                  <NextButton disabled={true} />
+                )}
               </div>
             </div>
           );
@@ -74,6 +75,26 @@ const AllLinks = props => {
       </Query>
     </div>
   );
+};
+
+const NextButton = ({ disabled }) => (
+  <button className={`pagination-button ${disabled ? 'disabled' : ''}`} disabled={disabled}>
+    Next
+  </button>
+);
+
+NextButton.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+};
+
+const PrevButton = ({ disabled }) => (
+  <button className={`pagination-button ${disabled ? 'disabled' : ''}`} disabled={disabled}>
+    Prev
+  </button>
+);
+
+PrevButton.propTypes = {
+  disabled: PropTypes.bool.isRequired,
 };
 
 AllLinks.propTypes = {
