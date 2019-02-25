@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Link } from 'react-router-dom';
 
 import Banner from '../components/Banner';
 import Header from '../components/Header';
 import Feed from '../components/Feed';
+import PaginationButtons from '../components/PaginationButtons';
 
 const GET_LINKS = gql`
   query PaginatedLinks($skip: Int) {
@@ -50,26 +50,10 @@ const AllLinks = props => {
           }
 
           return (
-            <div>
+            <React.Fragment>
               <Feed links={allLinks} />
-              <div className="pagination-button-container flex justify-content-center">
-                {currentPage > 1 ? (
-                  <Link to={`/?p=${currentPage - 1}`}>
-                    <PrevButton disabled={false} />
-                  </Link>
-                ) : (
-                  <PrevButton disabled={true} />
-                )}
-
-                {allLinks.length === 5 ? (
-                  <Link to={`/?p=${currentPage + 1}`}>
-                    <NextButton disabled={false} />
-                  </Link>
-                ) : (
-                  <NextButton disabled={true} />
-                )}
-              </div>
-            </div>
+              <PaginationButtons currentPage={currentPage} linkCount={allLinks.length} />
+            </React.Fragment>
           );
         }}
       </Query>

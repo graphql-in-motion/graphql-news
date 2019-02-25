@@ -90,8 +90,11 @@
 
 .comment-form {
   border-top: 1px solid #f0f0f0;
-  box-sizing: border-box;
   padding: 22px 2em 16px;
+}
+
+.comment-form, .comment-reply-form {
+  box-sizing: border-box;
 
   textarea {
     border: 1px solid #DFE0E5;

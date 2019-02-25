@@ -4,30 +4,18 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
 const SUBMIT_COMMENT_MUTATION = gql`
-  mutation CreateTopLevelComment($link: ID!, $content: String!) {
-    createComment(link: $link, content: $content) {
-      author {
-        _id
-      }
-      comments {
-        _id
-      }
-      content
-      created_at
-      link {
-        _id
-      }
-      parent {
-        _id
-      }
+  mutation CreateNestedComment($link: ID!, $parent: ID!, $content: String!) {
+    createComment(link: $link, parent: $parent, content: $content) {
+      _id
     }
   }
 `;
 
-export default class CommentForm extends Component {
+export default class CommentReplyForm extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired,
     linkId: PropTypes.string.isRequired,
+    parentComment: PropTypes.string.isRequired,
   };
 
   state = {
@@ -40,25 +28,23 @@ export default class CommentForm extends Component {
 
     mutate();
 
-    this.props.history.push(`/link/${this.props.linkId}`);
-    // window.location.reload(true); // eslint-disable-line no-undef
+    window.location.reload(true); // eslint-disable-line no-undef
   }
 
   render() {
     const { comment } = this.state;
-    const { linkId } = this.props;
+    const { linkId, parentComment } = this.props;
 
     return (
       <div className="comment-form-wrapper">
         <Mutation
           mutation={SUBMIT_COMMENT_MUTATION}
-          variables={{ link: linkId, content: comment }}
-          onCompleted={() => window.location.reload(true)} // eslint-disable-line no-undef
+          variables={{ link: linkId, parent: parentComment, content: comment }}
           // eslint-disable-next-line no-alert,no-undef
           onError={error => alert(error.toString().replace('Error: GraphQL error: ', ''))}
         >
           {mutate => (
-            <form className="comment-form" onSubmit={e => this.onSubmit(e, mutate)}>
+            <form className="comment-reply-form" onSubmit={e => this.onSubmit(e, mutate)}>
               <textarea
                 placeholder="What are your thoughts?"
                 onChange={e => this.setState({ comment: e.target.value })}

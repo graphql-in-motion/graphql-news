@@ -147,6 +147,10 @@
   padding: 10px 18px 11px;
   font-size: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+
+  &:hover {
+    background-color: #176ABB;
+  }
 }
 
 /**
@@ -201,10 +205,6 @@
   }
 }
 
-.pagination-button-container {
-  margin-bottom: 32px;
-}
-
 .pagination-button {
   @extend %ui-button-shared;
   border: none;
@@ -214,6 +214,7 @@
   margin-left: 0 !important;
   margin-right: 8px !important;
   padding: 10px 18px 11px !important;
+  height: 36px;
   min-width: 120px;
   background-color: #3275D6;
 
@@ -223,9 +224,17 @@
     display: block;
   }
 
+  &:hover {
+    background-color: #176ABB;
+  }
+
   &.disabled {
     background-color: $gullGrey;
     color: $solitude;
     cursor: not-allowed;
+
+    &:hover {
+      background-color: $gullGrey;
+    }
   }
 }

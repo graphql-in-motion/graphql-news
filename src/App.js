@@ -11,7 +11,7 @@ import SearchScreen from './screens/search';
 
 const PlaygroundContainer = () => (
   <Provider store={store}>
-    <Playground endpoint="http://localhost:4000/v1" />
+    <Playground store={store} endpoint="http://localhost:4000/v1" />
   </Provider>
 );
 
@@ -21,9 +21,9 @@ const App = ({ client }) => (
     <Route path="/link/:id" component={LinkScreen} />
     <Route path="/search/" component={SearchScreen} />
     <Route exact path="/login" component={Login} client={client} />
-    <div className="playground-container">
+    {/* <div className="playground-container">
       <Route exaxt path="/playground" component={PlaygroundContainer} />
-    </div>
+    </div> */}
   </div>
 );
 

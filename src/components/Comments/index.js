@@ -7,6 +7,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 
+import CommentReplyForm from '../Forms/Comment/ReplyForm';
+
 library.add(faComment);
 
 const GET_COMMENTS_FOR_LINK = gql`
@@ -52,8 +54,8 @@ const GET_COMMENTS_FOR_LINK = gql`
   }
 `;
 
-const CommentsContainer = ({ commentsLength, linkId }) => (
-  <Query query={GET_COMMENTS_FOR_LINK} variables={{ link: linkId }}>
+const CommentsContainer = props => (
+  <Query query={GET_COMMENTS_FOR_LINK} variables={{ link: props.linkId }}>
     {({ loading, error, data }) => {
       if (loading) return 'Loading...';
       if (error) return `Error! ${error.message}`;
@@ -64,18 +66,19 @@ const CommentsContainer = ({ commentsLength, linkId }) => (
         return (
           <div className="comment-display-wrapper">
             <div className="comment-display-header">
-              <h2>{commentsLength} Comments</h2>
+              <h2>{props.commentsLength} Comments</h2>
             </div>
             <ul className="comments-list">
               {commentsForLink.map(comment => (
                 <React.Fragment key={comment._id}>
-                  <CommentStruct comment={comment} />
+                  <CommentStruct {...props} comment={comment} linkId={props.linkId} />
                   {comment.comments.length > 0
                     ? comment.comments.map(nestedComment => (
                         <NestedCommentStruct
+                          {...props}
                           key={nestedComment._id}
+                          linkId={props.linkId}
                           comment={nestedComment}
-                          level={1}
                         />
                       ))
                     : null}
@@ -96,47 +99,78 @@ CommentsContainer.propTypes = {
   linkId: PropTypes.string.isRequired,
 };
 
-const CommentStruct = ({ comment }) => (
-  <li className="comment">
-    <div className="comment-meta">
-      <span>
-        by <span className="username">{comment.author.username}</span>
-      </span>
-      <span className="comment-timestamp">
-        {moment(comment.created_at, '{YYYY} MM-DDTHH:mm:ss SSS [Z] A').fromNow()}
-      </span>
-    </div>
-    <p className="comment-content">{comment.content}</p>
-    <div className="comment-action-area">
-      <ul className="comment-actions">
-        <li>
-          <FontAwesomeIcon className="fa-icon" icon="comment" />
-          Reply
-        </li>
-      </ul>
-    </div>
-  </li>
-);
+class CommentStruct extends React.Component {
+  static propTypes = {
+    comment: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    linkId: PropTypes.string.isRequired,
+  };
 
-CommentStruct.propTypes = {
-  comment: PropTypes.object.isRequired,
-};
+  state = {
+    isFormActive: false,
+  };
 
-const NestedCommentStruct = ({ comment, level }) => (
+  toggleReplyForm() {
+    const { isFormActive } = this.state;
+
+    if (isFormActive) {
+      this.setState({ isFormActive: false });
+    } else {
+      this.setState({ isFormActive: true });
+    }
+  }
+
+  render() {
+    const { comment, history, linkId } = this.props;
+    const { isFormActive } = this.state;
+
+    return (
+      <li className="comment">
+        <div className="comment-meta">
+          <span>
+            by <span className="username">{comment.author.username}</span>
+          </span>
+          <span className="comment-timestamp">
+            {moment(comment.created_at, '{YYYY} MM-DDTHH:mm:ss SSS [Z] A').fromNow()}
+          </span>
+        </div>
+        <p className="comment-content">{comment.content}</p>
+        <div className="comment-action-area">
+          <ul className="comment-actions">
+            <li onClick={this.toggleReplyForm.bind(this)} className="comment-action">
+              <FontAwesomeIcon className="fa-icon" icon="comment" />
+              Reply
+            </li>
+          </ul>
+          {isFormActive ? (
+            <CommentReplyForm history={history} linkId={linkId} parentComment={comment._id} />
+          ) : null}
+        </div>
+      </li>
+    );
+  }
+}
+
+const NestedCommentStruct = ({ comment, linkId, history }) => (
   <div style={{ borderLeft: '2px solid #DFE0E5' }}>
     <div style={{ paddingLeft: '14px' }}>
-      <CommentStruct comment={comment} />
+      <CommentStruct comment={comment} history={history} linkId={linkId} />
     </div>
     <div
       style={{
         borderLeft: '2px solid #DFE0E5',
         paddingLeft: '14px',
-        marginLeft: `${level * 14}px`,
+        marginLeft: `14px`,
       }}
     >
       {comment.comments.length > 0
         ? comment.comments.map(nestedComment => (
-            <CommentStruct key={nestedComment._id} comment={nestedComment} />
+            <CommentStruct
+              comment={nestedComment}
+              history={history}
+              key={nestedComment._id}
+              linkId={linkId}
+            />
           ))
         : null}
     </div>
@@ -145,7 +179,8 @@ const NestedCommentStruct = ({ comment, level }) => (
 
 NestedCommentStruct.propTypes = {
   comment: PropTypes.object.isRequired,
-  level: PropTypes.number.isRequired,
+  linkId: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default CommentsContainer;

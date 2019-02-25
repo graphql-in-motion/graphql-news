@@ -57,9 +57,9 @@ const LinkScreen = ({ history }) => {
                   score={score}
                   url={url}
                 />
-                <CommentForm id={_id} history={history} linkId={_id} />
+                <CommentForm history={history} linkId={_id} />
               </div>
-              <CommentsContainer commentsLength={commentsLength} linkId={_id} />
+              <CommentsContainer commentsLength={commentsLength} history={history} linkId={_id} />
             </React.Fragment>
           );
         }}

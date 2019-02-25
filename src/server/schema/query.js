@@ -48,7 +48,9 @@ const QueryType = new GraphQLObjectType({
             .toArray();
         }
 
-        return await Links.find({}).toArray();
+        return await Links.find({})
+          .toArray()
+          .reverse();
       },
     },
     link: {

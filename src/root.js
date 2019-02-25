@@ -8,7 +8,7 @@ import { withClientState } from 'apollo-link-state';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { getMainDefinition } from 'apollo-utilities';
 import { setContext } from 'apollo-link-context';
-// import { CachePersistor } from 'apollo-cache-persist';
+import { CachePersistor } from 'apollo-cache-persist';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -26,7 +26,7 @@ const stateLink = withClientState({
 
 // const persistor = new CachePersistor({
 //   cache,
-//   storage: window.localStorage,
+//   storage: window.localStorage, // eslint-disable-line no-undef
 //   debug: true,
 // });
 
@@ -81,7 +81,7 @@ export default class Root extends Component {
   };
 
   componentDidMount() {
-    // persistor.restore().then(() => this.setState({ restored: true }))
+    // persistor.restore().then(() => this.setState({ restored: true }));
     this.setState({ restored: true });
   }
 
