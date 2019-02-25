@@ -1,17 +1,17 @@
-/* globals fetch */
 import { GraphQLID, GraphQLObjectType, GraphQLNonNull, GraphQLString } from 'graphql';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import 'isomorphic-fetch';
 import moment from 'moment';
-import Mercury from "@postlight/mercury-parser";
+import Mercury from '@postlight/mercury-parser';
+import { AuthenticationError, UserInputError } from 'apollo-server';
 
 import LinkType from './types/link';
 import UserType from './types/user';
 import CommentType from './types/comment';
 import { AuthProvider, SignInPayload } from './types/auth';
-import { LINK_VOTED, pubsub } from '../constants';
+import { LINK_VOTED, COMMENT_CREATED, pubsub } from '../constants';
 
 const MutationType = new GraphQLObjectType({
   name: 'Mutation',
@@ -31,7 +31,7 @@ const MutationType = new GraphQLObjectType({
         const { link, content, parent } = data;
 
         const comment = {
-          author: user.id,
+          author: ObjectId(user.id),
           comments: [],
           content,
           created_at: moment(Date.now()).format('{YYYY} MM-DDTHH:mm:ss SSS [Z] A'),
@@ -41,7 +41,12 @@ const MutationType = new GraphQLObjectType({
 
         const response = await Comments.insert(comment);
 
-        return Object.assign({ _id: response.insertedIds[0] }, comment);
+        const commentObj = Object.assign({ _id: response.insertedIds[0] }, comment);
+
+        pubsub.publish(COMMENT_CREATED, { commentCreated: commentObj });
+        console.log(pubsub.publish(COMMENT_CREATED, { commentCreated: commentObj }));
+
+        return commentObj;
       },
     },
     createLink: {
@@ -57,12 +62,11 @@ const MutationType = new GraphQLObjectType({
         let linkTitle;
 
         const getTitle = async qs =>
-          await Mercury.parse(qs)
-            .then(response => {
-              const { title } = response;
+          await Mercury.parse(qs).then(response => {
+            const { title } = response;
 
-              linkTitle = title;
-            });
+            linkTitle = title;
+          });
 
         await getTitle(url);
 
@@ -135,13 +139,13 @@ const MutationType = new GraphQLObjectType({
         const user = await Users.findOne({ email });
 
         if (!user) {
-          throw new Error('No user exists with that email address.');
+          throw new UserInputError('No user exists with that email address. Please try again');
         }
 
         const valid = await bcrypt.compare(password, user.password);
 
         if (!valid) {
-          throw new Error('Incorrect password. Please try again.');
+          throw new UserInputError('Incorrect password. Please try again.');
         }
 
         const token = jsonwebtoken.sign(
@@ -164,7 +168,7 @@ const MutationType = new GraphQLObjectType({
       },
       resolve: async (_, { _id }, { user, db: { Links } }) => {
         if (!user) {
-          throw new Error('You must be logged in to vote');
+          throw new AuthenticationError('You must be logged in to vote');
         }
 
         const link = await Links.findOneAndUpdate({ _id: ObjectId(_id) }, { $inc: { score: 1 } });
@@ -183,7 +187,7 @@ const MutationType = new GraphQLObjectType({
       },
       resolve: async (_, { _id }, { user, db: { Links } }) => {
         if (!user) {
-          throw new Error('You must be logged in to vote');
+          throw new AuthenticationError('You must be logged in to vote');
         }
 
         const link = await Links.findOneAndUpdate({ _id: ObjectId(_id) }, { $inc: { score: -1 } });

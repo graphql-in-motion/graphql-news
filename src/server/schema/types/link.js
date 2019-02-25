@@ -25,8 +25,12 @@ const LinkType = new GraphQLObjectType({
     },
     comments: {
       type: new GraphQLList(CommentType),
-      resolve: async ({ _id }, data, { db: { Comments } }) =>
-        await Comments.find({ link: ObjectId(_id) }).toArray(),
+      resolve: async ({ _id }, data, { db: { Comments } }) => {
+        const comments = await Comments.find({ link: ObjectId(_id) }).toArray();
+        // Any comment that has a populated `parent` attribute is a nested comment and should
+        // not be returned as a top-level comment
+        return comments.filter(i => i.parent === null);
+      },
     },
     created_at: { type: new GraphQLNonNull(GraphQLString) },
     description: { type: GraphQLString },

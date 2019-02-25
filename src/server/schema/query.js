@@ -35,11 +35,13 @@ const QueryType = new GraphQLObjectType({
           return await Links.find({})
             .limit(first)
             .toArray();
-        } else if (skip && !first) {
+        }
+        if (skip && !first) {
           return await Links.find({})
             .skip(skip)
             .toArray();
-        } else if (skip && first) {
+        }
+        if (skip && first) {
           return await Links.find({})
             .limit(first)
             .skip(skip)
@@ -103,6 +105,22 @@ const QueryType = new GraphQLObjectType({
     allComments: {
       type: new GraphQLList(CommentType),
       resolve: async (_, data, { db: { Comments } }) => await Comments.find({}).toArray(),
+    },
+    commentsForLink: {
+      type: new GraphQLList(CommentType),
+      args: {
+        // We must know a link's ID in order to query for its comments
+        _id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve: async (_, data, { db: { Comments } }) => {
+        const comments = await Comments.find({}).toArray();
+        // eslint-disable-next-line consistent-return,array-callback-return
+        return comments.filter(i => {
+          if (i.link) {
+            return i.link.toString() === data._id && i.parent === null;
+          }
+        });
+      },
     },
   }),
 });

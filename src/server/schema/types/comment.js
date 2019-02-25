@@ -21,7 +21,12 @@ const CommentType = new GraphQLObjectType({
       type: new GraphQLList(CommentType),
       resolve: async ({ _id }, data, { db: { Comments } }) => {
         const comments = await Comments.find({}).toArray();
-        return comments.filter(i => i.parent === _id.toString());
+        // eslint-disable-next-line consistent-return,array-callback-return
+        return comments.filter(i => {
+          if (i.parent) {
+            return i.parent.toString() === _id.toString();
+          }
+        });
       },
     },
     author: {

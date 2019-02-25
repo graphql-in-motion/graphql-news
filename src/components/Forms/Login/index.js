@@ -1,21 +1,15 @@
-import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
-import { Mutation } from "react-apollo";
-import gql from "graphql-tag";
-import { client } from "../../../root";
+/* global localStorage */
+import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+import { client } from '../../../root';
 
-import { AUTH_TOKEN } from "../../../constants";
+import { AUTH_TOKEN } from '../../../constants';
 
 const SIGNUP_MUTATION = gql`
-  mutation SignupMutation(
-    $username: String!
-    $email: String!
-    $password: String!
-  ) {
-    createUser(
-      username: $username
-      provider: { email: $email, password: $password }
-    ) {
+  mutation SignupMutation($username: String!, $email: String!, $password: String!) {
+    createUser(username: $username, provider: { email: $email, password: $password }) {
       _id
     }
   }
@@ -43,20 +37,18 @@ const LOGIN_MUTATION = gql`
 
 class LoginForm extends Component {
   static propTypes = {
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
   };
 
   state = {
     login: true,
-    email: "",
-    password: "",
-    username: ""
+    email: '',
+    password: '',
+    username: '',
   };
 
   _confirmLogin = async data => {
-    const { token, user } = this.state.login
-      ? data.signInUser
-      : data.createUser;
+    const { token, user } = this.state.login ? data.signInUser : data.createUser;
     this._saveUserData(token, user);
     this.props.history.push(`/`);
   };
@@ -70,7 +62,7 @@ class LoginForm extends Component {
           storeUser(user: $user) @client
         }
       `,
-      variables: { user }
+      variables: { user },
     });
   };
 
@@ -114,34 +106,29 @@ class LoginForm extends Component {
                 mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
                 variables={{ username, email, password }}
                 onCompleted={data => this._confirmLogin(data)}
+                // eslint-disable-next-line no-alert,no-undef
+                onError={error => alert(error.toString().replace('Error: GraphQL error: ', ''))}
               >
                 {mutate => (
                   <button className="login-hero-button" onClick={mutate}>
-                    {login ? "Sign in" : "Create an account"}
+                    {login ? 'Sign in' : 'Create an account'}
                   </button>
                 )}
               </Mutation>
             </div>
-
           </div>
         </div>
         <div className="callout-wrapper">
           {login ? (
             <span>
-              New to GraphQL News?{" "}
-              <span
-                className="sign-up-cta"
-                onClick={() => this.setState({ login: !login })}
-              >
+              New to GraphQL News?{' '}
+              <span className="sign-up-cta" onClick={() => this.setState({ login: !login })}>
                 Create an account
               </span>
               .
             </span>
           ) : (
-            <span
-              className="sign-in-cta"
-              onClick={() => this.setState({ login: !login })}
-            >
+            <span className="sign-in-cta" onClick={() => this.setState({ login: !login })}>
               Already have an account?
             </span>
           )}

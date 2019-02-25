@@ -226,5 +226,6 @@
   &.disabled {
     background-color: $gullGrey;
     color: $solitude;
+    cursor: not-allowed;
   }
 }

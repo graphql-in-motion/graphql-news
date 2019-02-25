@@ -14,6 +14,9 @@ const ScoreCount = ({ _id, score }) => (
       }
     `}
     variables={{ _id }}
+    errorPolicy="ignore"
+    // eslint-disable-next-line no-alert,no-undef
+    onError={error => alert(error.toString().replace('Error: GraphQL error: ', ''))}
   >
     {({ data }) => {
       if (data) {
