@@ -44,6 +44,11 @@
 
 .comments-list {
   padding: 1em 2em;
+
+  .comments-list {
+    padding: 0 1.5em;
+    border-left: 2px solid #DFE0E5;
+  }
 }
 
 .sort-options {

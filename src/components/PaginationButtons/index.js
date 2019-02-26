@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 
 const PaginationButtons = ({ currentPage, linkCount }) => (
   <div className="pagination-button-container flex justify-content-center">
-    {currentPage > 1 ? (
-      <Link to={`/?p=${currentPage - 1}`}>
+    {currentPage >= 2 ? (
+      <Link to={currentPage > 2 ? `/?p=${currentPage - 1}` : '/'}>
         <PrevButton disabled={false} />
       </Link>
     ) : (

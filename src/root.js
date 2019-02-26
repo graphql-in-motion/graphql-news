@@ -8,7 +8,7 @@ import { withClientState } from 'apollo-link-state';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { getMainDefinition } from 'apollo-utilities';
 import { setContext } from 'apollo-link-context';
-import { CachePersistor } from 'apollo-cache-persist';
+// import { CachePersistor } from 'apollo-cache-persist';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter } from 'react-router-dom';
 
