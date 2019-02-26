@@ -31,26 +31,32 @@ const QueryType = new GraphQLObjectType({
         skip: { type: GraphQLInt },
       },
       resolve: async (_, { first, skip }, { db: { Links } }) => {
-        if (first && !skip) {
-          return await Links.find({})
-            .limit(first)
-            .toArray();
+        const links = await Links.find({}).toArray();
+        // We'll sort links based on the date they were created
+        const sortLinks = arr =>
+          arr.sort((a, b) => {
+            if (a.created_at > b.created_at) {
+              return -1;
+            }
+            if (a.created_at < b.created_at) {
+              return 1;
+            }
+            return 0;
+          });
+
+        if (first && (!skip || skip === 0)) {
+          return sortLinks(links).slice(0, first);
         }
         if (skip && !first) {
-          return await Links.find({})
-            .skip(skip)
-            .toArray();
+          return sortLinks(links).filter((v, i) => i > skip);
         }
         if (skip && first) {
-          return await Links.find({})
-            .limit(first)
-            .skip(skip)
-            .toArray();
+          return sortLinks(links)
+            .filter((v, i) => i > skip)
+            .slice(0, first);
         }
 
-        return await Links.find({})
-          .toArray()
-          .reverse();
+        return sortLinks(links);
       },
     },
     link: {
