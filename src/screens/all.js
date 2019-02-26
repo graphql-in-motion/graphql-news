@@ -10,7 +10,7 @@ import PaginationButtons from '../components/PaginationButtons';
 
 const GET_LINKS = gql`
   query PaginatedLinks($skip: Int) {
-    allLinks(first: 5, skip: $skip) {
+    links(first: 5, skip: $skip, filter: { recent: true }) {
       _id
       author {
         _id
@@ -43,7 +43,7 @@ const AllLinks = props => {
         {({ loading, error, data }) => {
           if (loading) return 'Loading...';
           if (error) return `Error! ${error.message}`;
-          const { allLinks } = data;
+          const { links } = data;
           let currentPage = parseInt(page, 10);
           if (!currentPage) {
             currentPage = 0;
@@ -51,8 +51,8 @@ const AllLinks = props => {
 
           return (
             <React.Fragment>
-              <Feed links={allLinks} />
-              <PaginationButtons currentPage={currentPage} linkCount={allLinks.length} />
+              <Feed links={links} />
+              <PaginationButtons currentPage={currentPage} linkCount={links.length} />
             </React.Fragment>
           );
         }}

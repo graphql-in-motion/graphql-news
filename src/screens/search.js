@@ -8,21 +8,13 @@ import Feed from '../components/Feed';
 
 const LINK_SEARCH = gql`
   query GetLinkByID($qs: String!) {
-    filterLinks(filter: { urlContains: $qs }) {
+    links(filter: { urlContains: $qs }) {
       _id
       author {
         _id
         username
       }
-      comments {
-        _id
-        content
-        created_at
-        author {
-          _id
-          username
-        }
-      }
+      commentsLength
       created_at
       description
       score
@@ -44,9 +36,9 @@ const SearchScreen = ({ history }) => {
         {({ loading, error, data }) => {
           if (loading) return 'Loading...';
           if (error) return `Error! ${error.message}`;
-          const { filterLinks } = data;
+          const { links } = data;
 
-          return <Feed links={filterLinks} />;
+          return <Feed links={links} />;
         }}
       </Query>
     </div>

@@ -6,6 +6,7 @@ import {
   GraphQLList,
   GraphQLString,
   GraphQLInputObjectType,
+  GraphQLBoolean,
 } from 'graphql';
 import { ObjectId } from 'mongodb';
 
@@ -18,47 +19,13 @@ const LinkFilter = new GraphQLInputObjectType({
   fields: () => ({
     top: { type: GraphQLInt },
     urlContains: { type: GraphQLString },
+    recent: { type: GraphQLBoolean },
   }),
 });
 
 const QueryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
-    allLinks: {
-      type: new GraphQLList(LinkType),
-      args: {
-        first: { type: GraphQLInt },
-        skip: { type: GraphQLInt },
-      },
-      resolve: async (_, { first, skip }, { db: { Links } }) => {
-        const links = await Links.find({}).toArray();
-        // We'll sort links based on the date they were created
-        const sortLinks = arr =>
-          arr.sort((a, b) => {
-            if (a.created_at > b.created_at) {
-              return -1;
-            }
-            if (a.created_at < b.created_at) {
-              return 1;
-            }
-            return 0;
-          });
-
-        if (first && (!skip || skip === 0)) {
-          return sortLinks(links).slice(0, first);
-        }
-        if (skip && !first) {
-          return sortLinks(links).filter((v, i) => i > skip);
-        }
-        if (skip && first) {
-          return sortLinks(links)
-            .filter((v, i) => i > skip)
-            .slice(0, first);
-        }
-
-        return sortLinks(links);
-      },
-    },
     link: {
       type: LinkType,
       args: {
@@ -67,21 +34,23 @@ const QueryType = new GraphQLObjectType({
       },
       resolve: async (_, { _id }, { db: { Links } }) => await Links.findOne(ObjectId(_id)),
     },
-    filterLinks: {
+    links: {
       type: new GraphQLList(LinkType),
       args: {
+        first: { type: GraphQLInt },
+        skip: { type: GraphQLInt },
         filter: { type: LinkFilter },
       },
-      resolve: async (_, { filter }, { db: { Links } }) => {
-        const { urlContains, top } = filter;
+      resolve: async (_, { first, skip, filter }, { db: { Links } }) => {
+        const { urlContains, top, recent } = filter;
 
         if (urlContains) {
           return await Links.find({ url: { $regex: `.*${urlContains}.*` } }).toArray();
         }
 
-        if (top) {
-          const linksArr = await Links.find({}).toArray();
+        let links = await Links.find({}).toArray();
 
+        if (top) {
           const compareScore = (a, b) => {
             if (a.score > b.score) {
               return -1;
@@ -92,10 +61,34 @@ const QueryType = new GraphQLObjectType({
             return 0;
           };
 
-          return linksArr.sort(compareScore).slice(0, top);
+          links = links.sort(compareScore).slice(0, top);
         }
 
-        return null;
+        if (recent) {
+          const compareDates = (a, b) => {
+            if (a.created_at > b.created_at) {
+              return -1;
+            }
+            if (a.created_at < b.created_at) {
+              return 1;
+            }
+            return 0;
+          };
+
+          links = links.sort(compareDates);
+        }
+
+        if (first && (!skip || skip === 0)) {
+          return links.slice(0, first);
+        }
+        if (skip && !first) {
+          return links.filter((v, i) => i > skip);
+        }
+        if (skip && first) {
+          return links.filter((v, i) => i > skip).slice(0, first);
+        }
+
+        return links;
       },
     },
     allUsers: {
