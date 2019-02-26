@@ -9,7 +9,7 @@ import Feed from '../components/Feed';
 import PaginationButtons from '../components/PaginationButtons';
 
 const GET_LINKS = gql`
-  query PaginatedLinks($skip: Int) {
+  query RecentLinks($skip: Int) {
     links(first: 5, skip: $skip, filter: { recent: true }) {
       _id
       author {

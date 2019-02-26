@@ -17,9 +17,10 @@ import CommentType from './types/comment';
 const LinkFilter = new GraphQLInputObjectType({
   name: 'LinkFilter',
   fields: () => ({
-    top: { type: GraphQLInt },
     urlContains: { type: GraphQLString },
+    top: { type: GraphQLBoolean },
     recent: { type: GraphQLBoolean },
+    controversial: { type: GraphQLBoolean },
   }),
 });
 
@@ -42,7 +43,7 @@ const QueryType = new GraphQLObjectType({
         filter: { type: LinkFilter },
       },
       resolve: async (_, { first, skip, filter }, { db: { Links } }) => {
-        const { urlContains, top, recent } = filter;
+        const { urlContains, top, recent, controversial } = filter;
 
         if (urlContains) {
           return await Links.find({ url: { $regex: `.*${urlContains}.*` } }).toArray();
@@ -61,7 +62,7 @@ const QueryType = new GraphQLObjectType({
             return 0;
           };
 
-          links = links.sort(compareScore).slice(0, top);
+          links = links.sort(compareScore);
         }
 
         if (recent) {
@@ -76,6 +77,20 @@ const QueryType = new GraphQLObjectType({
           };
 
           links = links.sort(compareDates);
+        }
+
+        if (controversial) {
+          const compareComments = (a, b) => {
+            if (a.comments.length > b.comments.length) {
+              return -1;
+            }
+            if (a.comments.length < b.comments.length) {
+              return 1;
+            }
+            return 0;
+          };
+
+          links = links.sort(compareComments);
         }
 
         if (first && (!skip || skip === 0)) {
