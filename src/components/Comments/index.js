@@ -54,11 +54,11 @@ const GET_COMMENTS_FOR_LINK = gql`
   }
 `;
 
-export default class CommentsContainer extends React.Component {
+class CommentStruct extends React.Component {
   static propTypes = {
-    commentsLength: PropTypes.number.isRequired,
-    linkId: PropTypes.string.isRequired,
+    comment: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
+    linkId: PropTypes.string.isRequired,
   };
 
   state = {
@@ -75,35 +75,46 @@ export default class CommentsContainer extends React.Component {
     }
   }
 
-  renderComments(comments) {
-    const { history, linkId } = this.props;
+  render() {
     const { isFormActive } = this.state;
+    const { comment, history, linkId } = this.props;
 
+    return (
+      <li className="comment">
+        <div className="comment-meta">
+          <span>
+            by <span className="username">{comment.author.username}</span>
+          </span>
+          <span className="comment-timestamp">
+            {moment(comment.created_at, '{YYYY} MM-DDTHH:mm:ss SSS [Z] A').fromNow()}
+          </span>
+        </div>
+        <p className="comment-content">{comment.content}</p>
+        <div className="comment-action-area">
+          <ul className="comment-actions">
+            <li onClick={this.toggleReplyForm.bind(this)} className="comment-action">
+              <FontAwesomeIcon className="fa-icon" icon="comment" />
+              Reply
+            </li>
+          </ul>
+          {isFormActive ? (
+            <CommentReplyForm history={history} linkId={linkId} parentComment={comment._id} />
+          ) : null}
+        </div>
+      </li>
+    );
+  }
+}
+
+export default class CommentsContainer extends React.Component {
+  static propTypes = {
+    commentsLength: PropTypes.number.isRequired,
+    linkId: PropTypes.string.isRequired,
+  };
+
+  renderComments(comments) {
     const commentsForDisplay = comments.map(comment => {
-      const commentStruct = (
-        <li className="comment">
-          <div className="comment-meta">
-            <span>
-              by <span className="username">{comment.author.username}</span>
-            </span>
-            <span className="comment-timestamp">
-              {moment(comment.created_at, '{YYYY} MM-DDTHH:mm:ss SSS [Z] A').fromNow()}
-            </span>
-          </div>
-          <p className="comment-content">{comment.content}</p>
-          <div className="comment-action-area">
-            <ul className="comment-actions">
-              <li onClick={this.toggleReplyForm.bind(this)} className="comment-action">
-                <FontAwesomeIcon className="fa-icon" icon="comment" />
-                Reply
-              </li>
-            </ul>
-            {isFormActive ? (
-              <CommentReplyForm history={history} linkId={linkId} parentComment={comment._id} />
-            ) : null}
-          </div>
-        </li>
-      );
+      const commentStruct = <CommentStruct {...this.props} comment={comment} />;
 
       let nestedComment;
 
