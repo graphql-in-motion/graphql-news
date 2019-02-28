@@ -13,42 +13,44 @@ const GET_ALL_LINKS = gql`
 `;
 
 const PaginationBar = ({ currentPage, linkCount }) => (
-  <div className="pagination-bar">
-    <div className="pagination-button-container flex justify-content-center align-items-center">
-      <Query query={GET_ALL_LINKS}>
-        {({ loading, data }) => {
-          if (loading) return null;
+  <Query query={GET_ALL_LINKS}>
+    {({ loading, data }) => {
+      if (loading) return null;
 
-          const linksLength = data.allLinks.length;
-          const pageLength = Math.ceil(linksLength / 10);
+      const linksLength = data.allLinks.length;
+      const pageLength = Math.ceil(linksLength / 10);
 
-          return (
-            <React.Fragment>
-              {currentPage >= 2 ? (
-                <Link to={currentPage > 2 ? `/?p=${currentPage - 1}` : '/'}>
-                  <PrevButton disabled={false} />
-                </Link>
-              ) : (
-                <PrevButton disabled={true} />
-              )}
+      return (
+        <React.Fragment>
+          {linksLength > 10 ? (
+            <div className="pagination-bar">
+              <div className="pagination-button-container flex justify-content-center align-items-center">
+                {currentPage >= 2 ? (
+                  <Link to={currentPage > 2 ? `/?p=${currentPage - 1}` : '/'}>
+                    <PrevButton disabled={false} />
+                  </Link>
+                ) : (
+                  <PrevButton disabled={true} />
+                )}
 
-              {currentPage < 1 ? 1 : currentPage}
-              {'/'}
-              {pageLength}
+                {currentPage < 1 ? 1 : currentPage}
+                {'/'}
+                {pageLength}
 
-              {linkCount >= 10 ? (
-                <Link to={`/?p=${currentPage === 0 ? 2 : currentPage + 1}`}>
-                  <NextButton disabled={false} />
-                </Link>
-              ) : (
-                <NextButton disabled={true} />
-              )}
-            </React.Fragment>
-          );
-        }}
-      </Query>
-    </div>
-  </div>
+                {linkCount >= 10 ? (
+                  <Link to={`/?p=${currentPage === 0 ? 2 : currentPage + 1}`}>
+                    <NextButton disabled={false} />
+                  </Link>
+                ) : (
+                  <NextButton disabled={true} />
+                )}
+              </div>
+            </div>
+          ) : null}
+        </React.Fragment>
+      );
+    }}
+  </Query>
 );
 
 PaginationBar.propTypes = {

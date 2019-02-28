@@ -35,7 +35,7 @@ const DestroyModal = ({ id, dismissModal, isActive }) => (
       <Mutation
         mutation={DESTROY_LINK_MUTATION}
         variables={{ id }}
-        onCompleted={window.location.reload(true)} // eslint-disable-line no-undef
+        onCompleted={() => window.location.reload(true)} // eslint-disable-line no-undef
       >
         {mutate => (
           <button className="modal-action-button destroy" onClick={mutate}>

@@ -7,6 +7,8 @@ import Header from '../components/Header';
 import Link from '../components/Link';
 import CommentForm from '../components/Forms/Comment';
 import CommentsContainer from '../components/Comments';
+import Spinner from '../components/Spinner';
+import ErrorMessage from '../components/ErrorMessage';
 
 const GET_LINK = gql`
   query GetLink($link: ID!) {
@@ -33,8 +35,9 @@ const LinkScreen = ({ history }) => {
       <Header history={history} />
       <Query query={GET_LINK} variables={{ link: qs.replace(/\/link\//, '') }}>
         {({ loading, error, data }) => {
-          if (loading) return 'Loading...';
-          if (error) return `Error! ${error.message}`;
+          if (loading) return <Spinner />;
+          if (error) return <ErrorMessage error={error.toString()} />;
+
           const {
             _id,
             author: { username },
@@ -51,6 +54,7 @@ const LinkScreen = ({ history }) => {
                 <Link
                   _id={_id}
                   author={username}
+                  authorId={data.link.author._id}
                   commentsLength={commentsLength}
                   createdAt={created_at} // eslint-disable-line camelcase
                   description={description}

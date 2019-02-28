@@ -96,10 +96,9 @@ class Header extends Component {
                       {token ? (
                         <button
                           className="logout-button"
-                          onClick={() => {
+                          onClick={async () => {
                             localStorage.removeItem(AUTH_TOKEN); // eslint-disable-line no-undef
-                            client.resetStore();
-                            this.props.history.push(`/`);
+                            await client.resetStore().then(() => window.location.reload(true)); // eslint-disable-line no-undef
                           }}
                         >
                           Logout

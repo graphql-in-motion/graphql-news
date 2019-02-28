@@ -28,7 +28,7 @@ const App = ({ client }) => (
 );
 
 App.propTypes = {
-  client: PropTypes.object.isRequired,
+  client: PropTypes.object,
 };
 
 export default App;

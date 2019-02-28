@@ -68,8 +68,6 @@ const data = {
   },
 };
 
-console.log(client);
-
 cache.writeData({ data });
 
 client.onResetStore(() => cache.writeData({ data }));

@@ -140,13 +140,10 @@ export default class CommentsContainer extends React.Component {
         variables={{ link: this.props.linkId }}
         pollInterval={500}
       >
-        {({ loading, error, data }) => {
-          if (loading) return 'Loading...';
-          if (error) return `Error! ${error.message}`;
-
+        {({ data }) => {
           const { commentsForLink } = data;
 
-          if (commentsForLink.length > 0) {
+          if (commentsForLink && commentsForLink.length > 0) {
             return (
               <div className="comment-display-wrapper">
                 <div className="comment-display-header">
