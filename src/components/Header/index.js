@@ -5,6 +5,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import gql from 'graphql-tag';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Query } from 'react-apollo';
 import { client } from '../../root';
 
 import Tower from '../Svg/tower';
@@ -13,13 +14,21 @@ import SubmitModal from '../Modal/Submit';
 
 library.add(faSearch);
 
+const GET_CLIENT_USER = gql`
+  query GetUser {
+    User @client {
+      _id
+      username
+    }
+  }
+`;
+
 class Header extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       submit: false,
-      user: null,
       token: localStorage.getItem(AUTH_TOKEN), // eslint-disable-line no-undef
       search: '',
     };
@@ -33,36 +42,10 @@ class Header extends Component {
     history: PropTypes.object,
   };
 
-  componentDidMount() {
-    this.getUserData();
-  }
-
   dismissModal() {
     this.setState({
       submit: false,
     });
-  }
-
-  async getUserData() {
-    if (this.state.token) {
-      const {
-        data: { user },
-      } = await client.query({
-        query: gql`
-          query GetUser {
-            user {
-              _id
-              username
-              links {
-                _id
-              }
-            }
-          }
-        `,
-      });
-
-      this.setState({ user });
-    }
   }
 
   handleSearchChange(e) {
@@ -79,7 +62,7 @@ class Header extends Component {
   }
 
   render() {
-    const { submit, user, token } = this.state;
+    const { submit, token } = this.state;
 
     return (
       <div className="header-wrapper">
@@ -100,25 +83,36 @@ class Header extends Component {
               </ul>
             </div>
             <div className="login-context-wrapper inline-flex align-items-center">
-              {token && user ? (
-                <div>
-                  <p className="current-user">{user.username}</p>
-                  <button
-                    className="logout-button"
-                    onClick={() => {
-                      localStorage.removeItem(AUTH_TOKEN); // eslint-disable-line no-undef
-                      client.clearStore();
-                      this.props.history.push(`/`);
-                    }}
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <Link to="/login" className="ml1 no-underline black">
-                  <button className="login-button">Login</button>
-                </Link>
-              )}
+              <Query query={GET_CLIENT_USER}>
+                {({ data }) => {
+                  const { User } = data;
+                  return (
+                    <React.Fragment>
+                      {token && User._id && User.username ? (
+                        <React.Fragment>
+                          <p className="current-user">{User.username}</p>
+                        </React.Fragment>
+                      ) : null}
+                      {token ? (
+                        <button
+                          className="logout-button"
+                          onClick={() => {
+                            localStorage.removeItem(AUTH_TOKEN); // eslint-disable-line no-undef
+                            client.resetStore();
+                            this.props.history.push(`/`);
+                          }}
+                        >
+                          Logout
+                        </button>
+                      ) : (
+                        <Link to="/login" className="ml1 no-underline black">
+                          <button className="login-button">Login</button>
+                        </Link>
+                      )}
+                    </React.Fragment>
+                  );
+                }}
+              </Query>
 
               <form className="search-wrapper" onSubmit={this.handleSearchSubmit}>
                 <FontAwesomeIcon className="search-icon" icon="search" />

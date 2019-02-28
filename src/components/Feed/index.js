@@ -12,6 +12,7 @@ const Feed = ({ links }) => (
               <Link
                 _id={link._id}
                 author={link.author.username}
+                authorId={link.author._id}
                 url={link.url}
                 description={link.description}
                 commentsLength={link.commentsLength}

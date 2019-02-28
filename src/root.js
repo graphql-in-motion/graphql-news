@@ -11,6 +11,7 @@ import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter } from 'react-router-dom';
 
 import { AUTH_TOKEN } from './constants';
+import { resolvers } from './resolvers';
 import App from './App';
 
 const cache = new InMemoryCache();
@@ -56,7 +57,22 @@ const link = authLink.concat(protocolLink);
 export const client = new ApolloClient({
   link,
   cache,
+  resolvers,
 });
+
+const data = {
+  User: {
+    __typename: 'User',
+    _id: null,
+    username: null,
+  },
+};
+
+console.log(client);
+
+cache.writeData({ data });
+
+client.onResetStore(() => cache.writeData({ data }));
 
 export default class Root extends Component {
   // eslint-disable-next-line class-methods-use-this
