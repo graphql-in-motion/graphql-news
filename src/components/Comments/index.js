@@ -135,7 +135,11 @@ export default class CommentsContainer extends React.Component {
 
   render() {
     return (
-      <Query query={GET_COMMENTS_FOR_LINK} variables={{ link: this.props.linkId }}>
+      <Query
+        query={GET_COMMENTS_FOR_LINK}
+        variables={{ link: this.props.linkId }}
+        pollInterval={500}
+      >
         {({ loading, error, data }) => {
           if (loading) return 'Loading...';
           if (error) return `Error! ${error.message}`;

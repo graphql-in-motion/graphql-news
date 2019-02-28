@@ -106,6 +106,10 @@ const QueryType = new GraphQLObjectType({
         return links;
       },
     },
+    allLinks: {
+      type: new GraphQLList(LinkType),
+      resolve: async (_, data, { db: { Links } }) => await Links.find({}).toArray(),
+    },
     allUsers: {
       type: new GraphQLList(UserType),
       resolve: async (_, data, { db: { Users } }) => await Users.find({}).toArray(),

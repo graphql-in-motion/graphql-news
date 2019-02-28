@@ -22,15 +22,6 @@ export default class CommentReplyForm extends Component {
     comment: '',
   };
 
-  // eslint-disable-next-line class-methods-use-this
-  onSubmit(e, mutate) {
-    e.preventDefault();
-
-    mutate();
-
-    window.location.reload(true); // eslint-disable-line no-undef
-  }
-
   render() {
     const { comment } = this.state;
     const { linkId, parentComment } = this.props;
@@ -44,7 +35,7 @@ export default class CommentReplyForm extends Component {
           onError={error => alert(error.toString().replace('Error: GraphQL error: ', ''))}
         >
           {mutate => (
-            <form className="comment-reply-form" onSubmit={e => this.onSubmit(e, mutate)}>
+            <form className="comment-reply-form" onSubmit={mutate}>
               <textarea
                 placeholder="What are your thoughts?"
                 onChange={e => this.setState({ comment: e.target.value })}

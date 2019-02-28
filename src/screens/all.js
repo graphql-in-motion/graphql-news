@@ -6,11 +6,12 @@ import gql from 'graphql-tag';
 import Banner from '../components/Banner';
 import Header from '../components/Header';
 import Feed from '../components/Feed';
-import PaginationButtons from '../components/PaginationButtons';
+import PaginationBar from '../components/Pagination';
+import Spinner from '../components/Spinner';
 
 const GET_LINKS = gql`
   query RecentLinks($skip: Int) {
-    links(first: 5, skip: $skip, filter: { recent: true }) {
+    links(first: 10, skip: $skip, filter: { recent: true }) {
       _id
       author {
         _id
@@ -30,7 +31,7 @@ const AllLinks = props => {
   const page = qs.replace(/\?p=/, '');
   let skip;
   if (page.length) {
-    skip = parseInt(page, 10) * 5 - 5;
+    skip = parseInt(page, 10) * 10 - 10;
   } else {
     skip = 0;
   }
@@ -39,10 +40,9 @@ const AllLinks = props => {
     <div className="screen-wrapper flex-direction-column">
       <Banner />
       <Header history={props.history} />
-      <Query query={GET_LINKS} variables={{ skip }}>
-        {({ loading, error, data }) => {
-          if (loading) return 'Loading...';
-          if (error) return `Error! ${error.message}`;
+      <Query query={GET_LINKS} variables={{ skip }} pollInterval={500}>
+        {({ loading, data }) => {
+          if (loading) return <Spinner />;
           const { links } = data;
           let currentPage = parseInt(page, 10);
           if (!currentPage) {
@@ -51,8 +51,8 @@ const AllLinks = props => {
 
           return (
             <React.Fragment>
+              <PaginationBar currentPage={currentPage} linkCount={links.length} />
               <Feed links={links} />
-              <PaginationButtons currentPage={currentPage} linkCount={links.length} />
             </React.Fragment>
           );
         }}

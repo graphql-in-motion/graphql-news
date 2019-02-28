@@ -206,17 +206,9 @@
 }
 
 .pagination-button {
-  @extend %ui-button-shared;
+  background: transparent;
   border: none;
-  color: #ffffff;
-  font-size: 12px;
-  letter-spacing: -0.02em;
-  margin-left: 0 !important;
-  margin-right: 8px !important;
-  padding: 10px 18px 11px !important;
-  height: 36px;
-  min-width: 120px;
-  background-color: #3275D6;
+  outline: none;
 
   a {
     color: inherit;
@@ -225,16 +217,14 @@
   }
 
   &:hover {
-    background-color: #176ABB;
+    color: #176ABB;
   }
 
   &.disabled {
-    background-color: $gullGrey;
-    color: $solitude;
-    cursor: not-allowed;
+    color: $gullGrey;
 
     &:hover {
-      background-color: $gullGrey;
+        color: $gullGrey;
     }
   }
 }
