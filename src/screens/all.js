@@ -43,18 +43,22 @@ const AllLinks = props => {
       <Query query={GET_LINKS} variables={{ skip }} pollInterval={500}>
         {({ loading, data }) => {
           if (loading) return <Spinner />;
-          const { links } = data;
-          let currentPage = parseInt(page, 10);
-          if (!currentPage) {
-            currentPage = 0;
+          if (data) {
+            const { links } = data;
+            let currentPage = parseInt(page, 10);
+            if (!currentPage) {
+              currentPage = 0;
+            }
+
+            return (
+              <React.Fragment>
+                <PaginationBar currentPage={currentPage} linkCount={links.length} />
+                <Feed links={links} />
+              </React.Fragment>
+            );
           }
 
-          return (
-            <React.Fragment>
-              <PaginationBar currentPage={currentPage} linkCount={links.length} />
-              <Feed links={links} />
-            </React.Fragment>
-          );
+          return <Spinner />;
         }}
       </Query>
     </div>

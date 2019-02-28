@@ -84,8 +84,10 @@ class Header extends Component {
             </div>
             <div className="login-context-wrapper inline-flex align-items-center">
               <Query query={GET_CLIENT_USER}>
-                {({ data }) => {
+                {({ data, loading }) => {
+                  if (loading) return null;
                   const { User } = data;
+
                   return (
                     <React.Fragment>
                       {token && User._id && User.username ? (
