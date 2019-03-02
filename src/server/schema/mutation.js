@@ -153,7 +153,7 @@ const MutationType = new GraphQLObjectType({
             id: user._id,
             email: user.email,
           },
-          'superdupersecret',
+          process.env.JWT_SECRET,
           { expiresIn: '3w' }
         );
 

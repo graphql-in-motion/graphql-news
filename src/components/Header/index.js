@@ -88,30 +88,33 @@ class Header extends Component {
                   if (loading) return null;
                   const { User } = data;
 
-                  return (
-                    <React.Fragment>
-                      {token && User._id && User.username ? (
-                        <React.Fragment>
-                          <p className="current-user">{User.username}</p>
-                        </React.Fragment>
-                      ) : null}
-                      {token ? (
-                        <button
-                          className="logout-button"
-                          onClick={async () => {
-                            localStorage.removeItem(AUTH_TOKEN); // eslint-disable-line no-undef
-                            await client.resetStore().then(() => window.location.reload(true)); // eslint-disable-line no-undef
-                          }}
-                        >
-                          Logout
-                        </button>
-                      ) : (
-                        <Link to="/login" className="ml1 no-underline black">
-                          <button className="login-button">Login</button>
-                        </Link>
-                      )}
-                    </React.Fragment>
-                  );
+                  if (User) {
+                    return (
+                      <React.Fragment>
+                        {token && User._id && User.username ? (
+                          <React.Fragment>
+                            <p className="current-user">{User.username}</p>
+                          </React.Fragment>
+                        ) : null}
+                        {token ? (
+                          <button
+                            className="logout-button"
+                            onClick={async () => {
+                              localStorage.removeItem(AUTH_TOKEN); // eslint-disable-line no-undef
+                              await client.resetStore().then(() => window.location.reload(true)); // eslint-disable-line no-undef
+                            }}
+                          >
+                            Logout
+                          </button>
+                        ) : (
+                          <Link to="/login" className="ml1 no-underline black">
+                            <button className="login-button">Login</button>
+                          </Link>
+                        )}
+                      </React.Fragment>
+                    );
+                  }
+                  return null;
                 }}
               </Query>
 

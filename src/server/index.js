@@ -8,19 +8,21 @@ import { SubscriptionServer } from 'subscriptions-transport-ws';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import expressPlayground from 'graphql-playground-middleware-express';
-import 'dotenv';
+
 // Schema
 import schema from './schema';
 // Local utility files
 import buildDataloaders from './utils/dataloader';
 
+require('dotenv').config();
+
 // Global constants
-const MONGO_URL = 'mongodb://localhost:27017/graphql-news-db';
+const MONGO_URL = process.env.MONGO_URL; // eslint-disable-line prefer-destructuring
 const PORT = 4000;
 const WS_PORT = 4040;
 
 const authMiddleware = jwt({
-  secret: 'superdupersecret',
+  secret: process.env.JWT_SECRET,
   credentialsRequired: false,
 });
 
@@ -31,7 +33,7 @@ const start = async () => {
     .catch(err => console.error(err.stack)) // eslint-disable-line no-console
     .then(client => {
       // Configure the server
-      const response = client.db('test');
+      const response = client.db(process.env.MONGO_DB);
       // Reference the database
       const db = {
         Links: response.collection('links'),

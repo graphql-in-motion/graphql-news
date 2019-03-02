@@ -20,7 +20,6 @@ const cache = new InMemoryCache();
 persistCache({
   cache,
   storage: window.localStorage,
-  trigger: 'background',
 });
 
 // WebSocket endpoint (used for subscriptions)
@@ -65,6 +64,9 @@ export const client = new ApolloClient({
   link,
   cache,
   resolvers,
+  fetchOptions: {
+    mode: 'no-cors',
+  },
 });
 
 const data = {

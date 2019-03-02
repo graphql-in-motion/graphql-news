@@ -40,7 +40,7 @@ const AllLinks = props => {
     <div className="screen-wrapper flex-direction-column">
       <Banner />
       <Header history={props.history} />
-      <Query query={GET_LINKS} variables={{ skip }} pollInterval={500}>
+      <Query query={GET_LINKS} variables={{ skip }}>
         {({ loading, data }) => {
           if (loading) return <Spinner />;
           if (data) {
