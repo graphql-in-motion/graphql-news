@@ -62,7 +62,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "start:server": "babel-node ./src/server",
-    "dev:server": "nodemon --exec babel-node ./src/server"
+    "dev:server": "nodemon --exec babel-node ./src/server",
+    "now-build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
