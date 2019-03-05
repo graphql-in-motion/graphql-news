@@ -58,7 +58,7 @@
     "react-scripts": "2.1.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev:web": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "start:server": "babel-node ./src/server",
