@@ -20,23 +20,25 @@ persistCache({
   storage: window.localStorage,
 });
 
-const localHttpUri = `http://localhost:${process.env.PORT || 4000}/v1`;
-const prodHttpUri = `https://${window.location.host}/api/v1`;
+console.log(process.env);
 
-// HTTP endpoint
-const httpLink = new HttpLink({
-  uri: process.env.TARGET !== 'now' ? localHttpUri : prodHttpUri,
-});
-
-const localWebsocketUri = `ws://localhost:${process.env.WS_PORT || 4040}/subscriptions`;
+const localWebsocketUri = `ws://localhost:${4040}/api/subscriptions`;
 const prodWebsocketUri = `wss://${window.location.host}/api/subscriptions`;
 
 // WebSocket endpoint (used for subscriptions)
 const wsLink = new WebSocketLink({
-  uri: process.env.TARGET !== 'now' ? localWebsocketUri : prodWebsocketUri,
+  uri: process.env.NODE_ENV === 'production' ? prodWebsocketUri : localWebsocketUri,
   options: {
     reconnect: true,
   },
+});
+
+const localHttpUri = `http://localhost:${4000}/api/v1`;
+const prodHttpUri = `https://${window.location.host}/api/v1`;
+
+// HTTP endpoint
+const httpLink = new HttpLink({
+  uri: process.env.NODE_ENV === 'production' ? prodHttpUri : localHttpUri,
 });
 
 // Using the `split()` function, we can send data to each link's

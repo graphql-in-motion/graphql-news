@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import jwt from 'express-jwt';
 import bodyParser from 'body-parser';
 import graphqlHTTP from 'graphql-in-motion_express-graphql';
@@ -48,7 +49,7 @@ const runSubscriptionServer = async () => {
   const websocketServer = createServer(app);
 
   websocketServer.listen(WS_PORT, () =>
-    console.log(`Websocket Server is now running on ws://localhost:${WS_PORT}/subscriptions`)
+    console.log(`Websocket Server is now running on ws://localhost:${WS_PORT}/api/subscriptions`)
   );
 
   // eslint-disable-next-line no-new
@@ -65,7 +66,7 @@ const runSubscriptionServer = async () => {
     },
     {
       server: websocketServer,
-      path: '/subscriptions',
+      path: '/api/subscriptions',
     }
   );
 };
@@ -82,11 +83,12 @@ const buildOptions = async req => {
       user: req.user,
     },
     schema,
-    graphiql: false,
-    subscriptionsEndpoint: `ws://localhost:${WS_PORT}/subscriptions`,
+    graphiql: true,
   };
 };
 
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '../../build')));
 app.use(bodyParser.json());
 app.use(
   jwt({
@@ -94,13 +96,12 @@ app.use(
     credentialsRequired: false,
   })
 );
-app.use('/v1', cors(), graphqlHTTP(buildOptions));
-app.get('/graphql', expressPlayground({ endpoint: '/v1' }));
-
-if (process.env.TARGET === 'now') {
-  module.exports = app;
-} else {
-  app.listen(PORT, () => {
-    console.log(`Running a GraphQL API server at localhost:${PORT}/graphql`);
-  });
-}
+app.use('/api/v1', cors(), graphqlHTTP(buildOptions));
+app.get('/api/graphql', expressPlayground({ endpoint: '/api/v1' }));
+// Anything that doesn't match the above, send back index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../build/index.html'));
+});
+app.listen(PORT, () => {
+  console.log(`Running a GraphQL API server at localhost:${PORT}/graphql`);
+});

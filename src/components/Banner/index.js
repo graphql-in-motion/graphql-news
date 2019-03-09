@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
 
 library.add(faTimes);
 
@@ -35,7 +34,7 @@ export default class Banner extends Component {
               GraphQL In Motion
             </a>{' '}
             {`video course. If you're interested in exploring the API, head over to the`}{' '}
-            <Link to="/playground">playground</Link>!
+            <a href="./api/graphql">playground</a>!
           </p>
 
           <button className="banner-close-button" onClick={this.dismissBanner}>
