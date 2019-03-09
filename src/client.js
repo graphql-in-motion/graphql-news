@@ -11,6 +11,8 @@ import { setContext } from 'apollo-link-context';
 import { AUTH_TOKEN } from './constants';
 import { resolvers } from './resolvers';
 
+require('dotenv').config();
+
 const cache = new InMemoryCache();
 
 persistCache({

@@ -18,16 +18,18 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 const WS_PORT = process.env.WS_PORT || 4040;
-const MONGO_URL = process.env.MONGO_URL; // eslint-disable-line prefer-destructuring
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/graphql-news';
+const MONGO_DB = process.env.MONGO_DB || 'graphql-news';
+const JWT_SECRET = process.env.JWT_SECRET || 'superdupersecret';
 
-const mongoInit = async () => {
+const connectDB = async () => {
   let col;
 
   await MongoClient.connect(MONGO_URL, { promiseLibrary: Promise, useNewUrlParser: true })
     .catch(err => console.error(err.stack))
     .then(client => {
       // Configure the server
-      const response = client.db(process.env.MONGO_DB);
+      const response = client.db(MONGO_DB);
       // Reference the database
       col = {
         Links: response.collection('links'),
@@ -40,7 +42,7 @@ const mongoInit = async () => {
 };
 
 const runSubscriptionServer = async () => {
-  const db = await mongoInit();
+  const db = await connectDB();
 
   // Create WebSocket listener server
   const websocketServer = createServer(app);
@@ -71,7 +73,7 @@ const runSubscriptionServer = async () => {
 runSubscriptionServer();
 
 const buildOptions = async req => {
-  const db = await mongoInit();
+  const db = await connectDB();
 
   return {
     context: {
@@ -88,7 +90,7 @@ const buildOptions = async req => {
 app.use(bodyParser.json());
 app.use(
   jwt({
-    secret: process.env.JWT_SECRET,
+    secret: JWT_SECRET,
     credentialsRequired: false,
   })
 );
