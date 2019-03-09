@@ -18,6 +18,7 @@
     "apollo-link-ws": "^1.0.9",
     "apollo-server": "^2.4.6",
     "apollo-utilities": "^1.0.21",
+    "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
@@ -45,6 +46,7 @@
     "moment": "^2.22.2",
     "mongodb": "^3.1.13",
     "node-sass": "^4.9.4",
+    "nodemon": "^1.18.10",
     "prop-types": "^15.7.2",
     "react": "^16.8.2",
     "react-apollo": "^2.5.1",
@@ -64,7 +66,7 @@
     "start": "npm run start:server",
     "start:server": "babel-node ./src/server",
     "dev:server": "nodemon --exec babel-node ./src/server",
-    "now-build": "react-scripts build"
+    "heroku-postbuild": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -75,5 +77,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "heroku-run-build-script": true
 }
