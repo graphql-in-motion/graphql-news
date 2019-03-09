@@ -20,8 +20,6 @@ persistCache({
   storage: window.localStorage,
 });
 
-console.log(process.env);
-
 const localWebsocketUri = `ws://localhost:${4040}/api/subscriptions`;
 const prodWebsocketUri = `wss://${window.location.host}/api/subscriptions`;
 
