@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { client } from '../../../root';
+import { client } from '../../../client';
 
 import { AUTH_TOKEN } from '../../../constants';
 

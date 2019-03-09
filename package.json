@@ -61,6 +61,7 @@
     "dev:web": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "start": "npm run start:server",
     "start:server": "babel-node ./src/server",
     "dev:server": "nodemon --exec babel-node ./src/server",
     "now-build": "react-scripts build"
