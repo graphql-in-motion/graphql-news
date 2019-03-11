@@ -40,6 +40,7 @@
     "graphql-playground-react": "^1.7.19",
     "graphql-subscriptions": "^1.0.0",
     "graphql-tag": "^2.10.1",
+    "graphql-tools": "^4.0.4",
     "halogen": "^0.2.0",
     "isomorphic-fetch": "^2.2.1",
     "jsonwebtoken": "^8.5.0",
@@ -52,7 +53,9 @@
     "react-apollo": "^2.5.1",
     "react-dom": "^16.8.2",
     "react-redux": "^6.0.1",
+    "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "react-test-renderer": "^16.8.4",
     "react-transition-group": "^2.6.0",
     "subscriptions-transport-ws": "^0.9.15"
   },
