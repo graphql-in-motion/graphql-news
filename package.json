@@ -46,7 +46,7 @@
     "jsonwebtoken": "^8.5.0",
     "moment": "^2.22.2",
     "mongodb": "^3.1.13",
-    "node-sass": "^4.9.4",
+    "node-sass": "^4.13.1",
     "nodemon": "^1.18.10",
     "prop-types": "^15.7.2",
     "react": "^16.8.2",
